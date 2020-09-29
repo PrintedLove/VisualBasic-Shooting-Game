@@ -10,4 +10,5 @@ C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Sh
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\obj\Debug\Visual-Basic-Shooting-Game-Project.exe
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\obj\Debug\Visual-Basic-Shooting-Game-Project.xml
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\obj\Debug\Visual-Basic-Shooting-Game-Project.pdb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\bin\Debug\Resources\munro.ttf
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\bin\Debug\Resources\language\munro.ttf
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game-Project\bin\Debug\Resources\image\character.png
