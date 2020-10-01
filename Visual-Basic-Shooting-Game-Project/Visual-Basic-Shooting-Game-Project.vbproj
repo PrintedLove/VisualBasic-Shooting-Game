@@ -47,6 +47,9 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -74,9 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Sprite.vb" />
-    <Compile Include="Form_play.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Form_play.vb" />
     <Compile Include="Form_play.Designer.vb">
       <DependentUpon>Form_play.vb</DependentUpon>
       <SubType>Form</SubType>
@@ -110,6 +111,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

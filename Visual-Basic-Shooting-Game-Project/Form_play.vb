@@ -57,8 +57,6 @@ Public Class Form_play
         strFormat.Alignment = StringAlignment.Center
 
         spr_character = GetSprite("\Resources\image\character.png")
-        spr_character.x = Me.Width \ 2
-        spr_character.y = Me.Height \ 2
 
         StartGameLoop()
     End Sub
@@ -95,7 +93,7 @@ Public Class Form_play
         DrawText(Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), Me.Width \ 2, 50, Me.Font, WHITE, MAX_ALPHA)
 
         'draw character
-        DrawSprite(spr_character)
+        DrawSprite(spr_character, Me.Width \ 2, Me.Height \ 2)
 
         'draw before screen
         graphic = Graphics.FromImage(BeforeScreen)
@@ -105,8 +103,8 @@ Public Class Form_play
         graphic.Clear(GRAY_LIGHT)
     End Sub
 
-    Private Sub DrawSprite(ByVal sprite As Sprite)
-        graphic.DrawImage(sprite.spr, sprite.x - sprite.width \ 2, sprite.y - sprite.height \ 2)
+    Private Sub DrawSprite(ByVal sprite As Sprite, ByVal x As Integer, ByVal y As Integer)
+        graphic.DrawImage(sprite.spr, x + sprite.width \ 2, y + sprite.height \ 2)
     End Sub
 
     Private Sub DrawText(ByVal str As String, ByVal x As Integer, ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
@@ -130,9 +128,7 @@ Public Class Form_play
 
             img.Dispose()
 
-            Dim spr As New Sprite(bm, 0, 0, bm.Size.Width, bm.Size.Height)
-
-            Return spr
+            Return New Sprite(bm, bm.Size.Width, bm.Size.Height)
         Else
             Throw New Exception(String.Format("Cannot load _image '{0}'", strImageName))
             Return Nothing

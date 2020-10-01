@@ -9,10 +9,10 @@ Imports System.Runtime.InteropServices
 ' 어셈블리 특성 값을 검토합니다.
 
 <Assembly: AssemblyTitle("Visual-Basic-Shooting-Game-Project")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyDescription("visual basic game example made by printed love")>
+<Assembly: AssemblyCompany("Printed Heart")>
 <Assembly: AssemblyProduct("Visual-Basic-Shooting-Game-Project")>
-<Assembly: AssemblyCopyright("Copyright ©  2020")>
+<Assembly: AssemblyCopyright("Copyright ©  2020 Printed Love")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
