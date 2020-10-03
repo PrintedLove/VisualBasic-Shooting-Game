@@ -1,8 +1,12 @@
-﻿'made by - Im Won Ju (219124131)
-'Visual Basic Class Final Exam
+﻿'[Visual Basic] Visual Basic Shooting Game
+'made by - Printed Love
+'Blog: https://printed.tistory.com
+'YouTube: https://www.youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ?view_as=subscriber
 
 Imports System.Drawing.Text
 Imports System.ComponentModel
+Imports Microsoft.VisualBasic.Devices
+Imports System.Math
 'Imports System.Drawing
 
 Public Class Form_play
@@ -20,7 +24,8 @@ Public Class Form_play
     Dim playtime_m, playtime_s As UInteger
 
     'player
-    Public player_hspeed, player_vspeed As Integer
+    Public speed, player_hspeed, player_vspeed As Integer
+    Public playerMove As Boolean = False
 
     'background
     Public bg_x, bg_y As Integer
@@ -30,6 +35,7 @@ Public Class Form_play
         FormBorderStyle = FormBorderStyle.FixedSingle
         Width = S_WIDTH
         Height = S_HEIGHT
+        PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
 
         Dim bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
@@ -53,6 +59,12 @@ Public Class Form_play
         strFormat.LineAlignment = StringAlignment.Center
         strFormat.Alignment = StringAlignment.Center
 
+        NewGame()
+    End Sub
+
+    Private Sub NewGame()
+        speed = 5
+
         bg_x = 0
         bg_y = 0
 
@@ -73,6 +85,7 @@ Public Class Form_play
 
                 Application.DoEvents()
 
+                GameEvent()
                 DrawGraphics()
             End If
         Loop
@@ -93,14 +106,73 @@ Public Class Form_play
             g.Clear(GRAY_LIGHT)
             DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
             DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
+
+            If bg_x <> 0 Then
+                DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0), New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            End If
+
+            If bg_y <> 0 Then
+                DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
+            End If
+
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 50, font_16, WHITE, MAX_ALPHA)
             DrawSprite(g, spr_character, S_WIDTH \ 2, S_HEIGHT \ 2)
+
+            'DrawText(g, CStr(player_hspeed) & " " & CStr(player_vspeed), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
             PictureBox_play.Image = bmp
             PictureBox_play.Refresh()
         End If
+    End Sub
+
+    Private Sub GameEvent()
+        BackgroundControl()
+        PlayerControl()
+    End Sub
+
+    Private Sub BackgroundControl()
+        bg_x += player_hspeed
+        bg_y += player_vspeed
+
+        If (bg_x > S_WIDTH \ 2 Or bg_x < -S_WIDTH \ 2) Then
+            bg_x -= Sign(bg_x) * S_WIDTH \ 2
+        End If
+
+        If (bg_y > S_HEIGHT \ 2 Or bg_y < -S_HEIGHT \ 2) Then
+            bg_y -= Sign(bg_y) * S_HEIGHT \ 2
+        End If
+    End Sub
+
+    Private Sub PlayerControl()
+        If (playerMove) Then
+            Dim mouse_angle As Double = GetAngleTwoPoint(S_WIDTH \ 2, S_HEIGHT \ 2, mouse_coord.X, mouse_coord.Y)
+            Dim player_moveCoord As Point = GetCoordCircle(0, 0, mouse_angle, speed)
+
+            player_hspeed = -player_moveCoord.X
+            player_vspeed = -player_moveCoord.Y
+        Else
+            If player_hspeed <> 0 Then
+                player_hspeed -= Sign(player_hspeed) * Max(Abs(player_hspeed \ 3), 1)
+            End If
+
+            If player_vspeed <> 0 Then
+                player_vspeed -= Sign(player_vspeed) * Max(Abs(player_vspeed \ 3), 1)
+            End If
+        End If
+    End Sub
+
+    Private Sub PictureBox_play_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseMove
+        mouse_coord = e.Location
+    End Sub
+
+    Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
+        playerMove = True
+    End Sub
+
+    Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
+        playerMove = False
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed

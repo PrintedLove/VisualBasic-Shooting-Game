@@ -16,3 +16,21 @@ D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooti
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\character.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\character.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.resx
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Sprite.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe.config
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.pdb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.xml
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbprojAssemblyReference.cache
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Form_play.resources
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Resources.resources
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbproj.GenerateResource.cache
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbproj.CoreCompileInputs.cache
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.exe
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.xml
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.pdb

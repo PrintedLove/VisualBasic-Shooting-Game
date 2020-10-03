@@ -1,4 +1,6 @@
 ﻿Imports System.Drawing.Text
+Imports System.Math
+Imports System.Net.NetworkInformation
 'Imports System.ComponentModel
 'Imports System.Drawing
 
@@ -6,6 +8,7 @@ Module Module_main
     'screen
     Public S_WIDTH As Int16 = 640
     Public S_HEIGHT As Int16 = 640
+    Public mouse_coord As Point
 
     'color
     Public MAX_ALPHA As Int16 = 255
@@ -38,7 +41,7 @@ Module Module_main
     Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point, ByVal color As Color, ByVal alpha As Int16)
         Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
-        Using brush As Brush = New Drawing.SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush)
+        Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, 2)
             g.DrawLine(pen, pnt_x, pnt_y)
         End Using
     End Sub
@@ -63,5 +66,22 @@ Module Module_main
             Throw New Exception(String.Format("Cannot load _image '{0}'", strImageName))
             Return Nothing
         End If
+    End Function
+
+    Public Function GetAngleTwoPoint(ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer)
+        Dim dx As Integer = x2 - x1
+        Dim dy As Integer = y2 - y1
+
+        Dim angle As Double = Atan2(dy, dx)
+
+        Return angle
+    End Function
+
+    Public Function GetCoordCircle(ByVal x As Integer, ByVal y As Integer, ByVal dgree As Double, ByVal radius As Integer)
+        Dim circle_x As Integer = x + CInt(Cos(dgree) * radius)
+        Dim circle_y As Integer = y + CInt(Sin(dgree) * radius)
+        Dim circle_coord As New Point(circle_x, circle_y)
+
+        Return circle_coord
     End Function
 End Module

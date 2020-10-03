@@ -1,32 +1,17 @@
-﻿'made by - Im Won Ju (219124131)
-'Visual Basic Class Final Exam
+﻿'[Visual Basic] Visual Basic Shooting Game
+'made by - Printed Love
+'Blog: https://printed.tistory.com
+'YouTube: https://www.youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ?view_as=subscriber
 
-Imports System.IO
-Imports System.Drawing
 Imports System.Drawing.Text
-Imports System.Reflection
 Imports System.ComponentModel
-Imports System.Runtime.InteropServices
+Imports Microsoft.VisualBasic.Devices
+Imports System.Math
+'Imports System.Drawing
 
 Public Class Form_play
 
-    'screen
-    Dim S_WIDTH As Int16 = 640
-    Dim S_HEIGHT As Int16 = 640
-
-    'color
-    Dim MAX_ALPHA As Int16 = 255
-    Dim WHITE As Color = Color.FromArgb(MAX_ALPHA, 214, 231, 255)
-    Dim GRAY_DEEP As Color = Color.FromArgb(MAX_ALPHA, 66, 71, 75)
-    Dim GRAY_LIGHT As Color = Color.FromArgb(MAX_ALPHA, 79, 85, 91)
-    Dim SKYBLUE As Color = Color.FromArgb(MAX_ALPHA, 107, 165, 247)
-
-    'font
-    Dim font_16 As Font = GetFont(Me.GetType.Assembly, "Visual_Basic_Shooting_Game.munro.ttf", 16, FontStyle.Regular)
-    Dim font_32 As Font = New Font(font_16.FontFamily, 64, font_16.Style)
-    Dim strFormat As New StringFormat
-
-    'Dim screen_pic As PictureBox
+    'picturebox bitmap
     Dim screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
     'game control value
@@ -38,11 +23,9 @@ Public Class Form_play
     Dim tick_recent As ULong = 0
     Dim playtime_m, playtime_s As UInteger
 
-    'image
-    Public spr_character As Sprite = GetSprite("character.png")
-
     'player
-    Public player_hspeed, player_vspeed As Integer
+    Public speed, player_hspeed, player_vspeed As Integer
+    Public playerMove As Boolean = False
 
     'background
     Public bg_x, bg_y As Integer
@@ -52,11 +35,11 @@ Public Class Form_play
         FormBorderStyle = FormBorderStyle.FixedSingle
         Width = S_WIDTH
         Height = S_HEIGHT
-        'Focus()
-        'Show()
+        PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
 
         Dim bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
+        screen_bmp.Dispose()
         screen_bmp = bmp
 
         Using g As Graphics = Graphics.FromImage(screen_bmp)
@@ -65,9 +48,22 @@ Public Class Form_play
         End Using
 
         PictureBox_play.Image = bmp
+        PictureBox_play.Refresh()
 
+        Dim strFontName As String = Application.ExecutablePath
+        strFontName = strFontName.Substring(0, strFontName.LastIndexOf("\bin")) & "\font\munro.ttf"
+
+        font_munro.AddFontFile(strFontName)
+        font_16 = New Font(font_munro.Families(0), 16)
+        font_32 = New Font(font_munro.Families(0), 32)
         strFormat.LineAlignment = StringAlignment.Center
         strFormat.Alignment = StringAlignment.Center
+
+        NewGame()
+    End Sub
+
+    Private Sub NewGame()
+        speed = 5
 
         bg_x = 0
         bg_y = 0
@@ -89,6 +85,7 @@ Public Class Form_play
 
                 Application.DoEvents()
 
+                GameEvent()
                 DrawGraphics()
             End If
         Loop
@@ -109,8 +106,19 @@ Public Class Form_play
             g.Clear(GRAY_LIGHT)
             DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
             DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
+
+            If bg_x <> 0 Then
+                DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0), New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            End If
+
+            If bg_y <> 0 Then
+                DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
+            End If
+
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 50, font_16, WHITE, MAX_ALPHA)
             DrawSprite(g, spr_character, S_WIDTH \ 2, S_HEIGHT \ 2)
+
+            'DrawText(g, CStr(player_hspeed) & " " & CStr(player_vspeed), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
@@ -119,76 +127,56 @@ Public Class Form_play
         End If
     End Sub
 
-    Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite As Sprite, ByVal x As Integer, ByVal y As Integer)
-        g.DrawImage(sprite.spr, x - sprite.width \ 2, y - sprite.height \ 2)
+    Private Sub GameEvent()
+        BackgroundControl()
+        PlayerControl()
     End Sub
 
-    Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer, ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
-        Dim text_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
+    Private Sub BackgroundControl()
+        bg_x += player_hspeed
+        bg_y += player_vspeed
 
-        Using brush As Brush = New Drawing.SolidBrush(text_color)
-            g.DrawString(str, fnt, brush, x, y, strFormat)
-        End Using
-
-        fnt.Dispose()
-    End Sub
-
-    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point, ByVal color As Color, ByVal alpha As Int16)
-        Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
-
-        Using brush As Brush = New Drawing.SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush)
-            g.DrawLine(pen, pnt_x, pnt_y)
-        End Using
-    End Sub
-
-    Public Function GetSprite(ByVal file_name As String) As Sprite
-        Dim strImageName As String = Application.ExecutablePath
-
-        strImageName = strImageName.Substring(0, strImageName.LastIndexOf("\bin")) & "\image\" & file_name
-
-        If IO.File.Exists(strImageName) Then
-            Dim img As Image = Image.FromFile(strImageName)
-            Dim bm As New Bitmap(width:=img.Width, height:=img.Height, format:=img.PixelFormat)
-
-            Using g As Graphics = Graphics.FromImage(bm)
-                g.DrawImage(img, Point.Empty)
-            End Using
-
-            img.Dispose()
-
-            Return New Sprite(bm, bm.Size.Width, bm.Size.Height)
-        Else
-            Throw New Exception(String.Format("Cannot load _image '{0}'", strImageName))
-            Return Nothing
+        If (bg_x > S_WIDTH \ 2 Or bg_x < -S_WIDTH \ 2) Then
+            bg_x -= Sign(bg_x) * S_WIDTH \ 2
         End If
-    End Function
 
-    Public Function GetFont(aAssembly As Assembly, strFontName As String, intFontSize As Integer, fsFontStyle As FontStyle) As Font
-        Using pcolFonts As New PrivateFontCollection
-            Dim bFont() As Byte = bRawFontData(aAssembly, strFontName)
-            Dim ptrMemFont As IntPtr = Marshal.AllocCoTaskMem(bFont.Length)
+        If (bg_y > S_HEIGHT \ 2 Or bg_y < -S_HEIGHT \ 2) Then
+            bg_y -= Sign(bg_y) * S_HEIGHT \ 2
+        End If
+    End Sub
 
-            Marshal.Copy(bFont, 0, ptrMemFont, bFont.Length)
-            pcolFonts.AddMemoryFont(ptrMemFont, bFont.Length)
+    Private Sub PlayerControl()
+        If (playerMove) Then
+            Dim mouse_angle As Double = GetAngleTwoPoint(S_WIDTH \ 2, S_HEIGHT \ 2, mouse_coord.X, mouse_coord.Y)
+            Dim player_moveCoord As Point = GetCoordCircle(0, 0, mouse_angle, speed)
 
-            Marshal.FreeCoTaskMem(ptrMemFont)
+            player_hspeed = -player_moveCoord.X
+            player_vspeed = -player_moveCoord.Y
+        Else
+            If player_hspeed <> 0 Then
+                player_hspeed -= Sign(player_hspeed) * Max(Abs(player_hspeed \ 3), 1)
+            End If
 
-            Return New Font(pcolFonts.Families(0), intFontSize, fsFontStyle)
-        End Using
-    End Function
+            If player_vspeed <> 0 Then
+                player_vspeed -= Sign(player_vspeed) * Max(Abs(player_vspeed \ 3), 1)
+            End If
+        End If
+    End Sub
 
-    Private Function bRawFontData(aAssembly As Assembly, strFontName As String) As Byte()
-        Using stFont As Stream = aAssembly.GetManifestResourceStream(strFontName)
-            If (stFont Is Nothing) Then Throw New Exception(String.Format("Cannot load _font '{0}'", strFontName))
+    Private Sub PictureBox_play_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseMove
+        mouse_coord = e.Location
+    End Sub
 
-            Dim bFontBuffer() As Byte = New Byte(CInt(stFont.Length - 1)) {}
-            stFont.Read(bFontBuffer, 0, CInt(stFont.Length))
+    Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
+        playerMove = True
+    End Sub
 
-            Return bFontBuffer
-        End Using
-    End Function
+    Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
+        playerMove = False
+    End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        screen_bmp.Dispose()
         PictureBox_play.Dispose()
     End Sub
 
