@@ -5,9 +5,8 @@
 
 Imports System.Drawing.Text
 Imports System.ComponentModel
-Imports Microsoft.VisualBasic.Devices
 Imports System.Math
-'Imports System.Drawing
+'Imports Microsoft.VisualBasic.Devices
 
 Public Class Form_play
 
@@ -23,13 +22,6 @@ Public Class Form_play
     Dim tick_recent As ULong = 0
     Dim playtime_m, playtime_s As UInteger
 
-    'player
-    Public speed, player_hspeed, player_vspeed As Integer
-    Public playerMove As Boolean = False
-
-    'background
-    Public bg_x, bg_y As Integer
-
     Private Sub Form_play_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Text = "Visual Basic Shooting Game"
         FormBorderStyle = FormBorderStyle.FixedSingle
@@ -44,26 +36,43 @@ Public Class Form_play
 
         Using g As Graphics = Graphics.FromImage(screen_bmp)
             Me.DoubleBuffered = True
-            g.Clear(GRAY_LIGHT)
+            g.Clear(GRAY)
         End Using
 
         PictureBox_play.Image = bmp
         PictureBox_play.Refresh()
 
-        Dim strFontName As String = Application.ExecutablePath
-        strFontName = strFontName.Substring(0, strFontName.LastIndexOf("\bin")) & "\font\munro.ttf"
-
-        font_munro.AddFontFile(strFontName)
-        font_16 = New Font(font_munro.Families(0), 16)
-        font_32 = New Font(font_munro.Families(0), 32)
-        strFormat.LineAlignment = StringAlignment.Center
-        strFormat.Alignment = StringAlignment.Center
-
+        SetValue()
         NewGame()
     End Sub
 
     Private Sub NewGame()
-        speed = 5
+        lv = 1
+        exp_present = 0
+        exp_required = 100
+
+        hp_max = 100
+        hp = 0
+        hp_regen = 0
+        defense = 0
+
+        atk_dam = 10
+        atk_reload = 1
+        atk_spd = 1
+        atk_num = 1
+        atk_size = 1
+        atk_range = 10
+        atk_penetrate = 0
+        atk_explosion = 0
+
+        critical = 0
+        critical_dam = 150
+
+        speed = 3
+
+        player_hspeed = 0
+        player_vspeed = 0
+        playerMove = False
 
         bg_x = 0
         bg_y = 0
@@ -77,7 +86,7 @@ Public Class Form_play
         Do While isRunning = True
             tick = DateTime.Now.Ticks       'current time tick
 
-            If tick > tick_recent + 200000 Then     'game initialize every 0.02 Sec
+            If tick > tick_recent + 100000 Then     'initialize every 0.01 Sec
                 tick_recent = tick
                 playtime_s = (tick - tick_start) \ 10000000      'playtime count
                 playtime_m = playtime_s \ 60
@@ -103,7 +112,9 @@ Public Class Form_play
 
         Using g As Graphics = Graphics.FromImage(bmp)
             Me.DoubleBuffered = True
-            g.Clear(GRAY_LIGHT)
+            g.Clear(GRAY)
+
+            'Draw Background Lines
             DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
             DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
 
@@ -115,10 +126,18 @@ Public Class Form_play
                 DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
             End If
 
-            DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 50, font_16, WHITE, MAX_ALPHA)
-            DrawSprite(g, spr_character, S_WIDTH \ 2, S_HEIGHT \ 2)
+            'Draw LV, EXP Bar
+            DrawText(g, "HP", 15, 15, font_16, WHITE, MAX_ALPHA)
+            DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
+            DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
 
-            'DrawText(g, CStr(player_hspeed) & " " & CStr(player_vspeed), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
+            'Draw Time
+            DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
+
+            'Draw Player
+            DrawSprite(g, spr_player, S_WIDTH \ 2, S_HEIGHT \ 2)
+
+            'DrawText(g, CStr(exp_required), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
@@ -146,7 +165,17 @@ Public Class Form_play
     End Sub
 
     Private Sub PlayerControl()
-        If (playerMove) Then
+        'Check EXP
+        If exp_present >= exp_required Then
+            Dim exp_excess As UInteger = exp_present - exp_required
+
+            lv += 1
+            exp_present = exp_excess
+            exp_required = Round(exp_required * 1.01 + 25)
+        End If
+
+        'Move Control
+        If playerMove Then
             Dim mouse_angle As Double = GetAngleTwoPoint(S_WIDTH \ 2, S_HEIGHT \ 2, mouse_coord.X, mouse_coord.Y)
             Dim player_moveCoord As Point = GetCoordCircle(0, 0, mouse_angle, speed)
 
@@ -169,6 +198,7 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
         playerMove = True
+        exp_present += 100
     End Sub
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp

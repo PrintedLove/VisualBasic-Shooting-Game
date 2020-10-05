@@ -1,8 +1,5 @@
 ﻿Imports System.Drawing.Text
 Imports System.Math
-Imports System.Net.NetworkInformation
-'Imports System.ComponentModel
-'Imports System.Drawing
 
 Module Module_main
     'screen
@@ -14,17 +11,51 @@ Module Module_main
     Public MAX_ALPHA As Int16 = 255
     Public WHITE As Color = Color.FromArgb(MAX_ALPHA, 214, 231, 255)
     Public GRAY_DEEP As Color = Color.FromArgb(MAX_ALPHA, 66, 71, 75)
-    Public GRAY_LIGHT As Color = Color.FromArgb(MAX_ALPHA, 79, 85, 91)
-    Public SKYBLUE As Color = Color.FromArgb(MAX_ALPHA, 107, 165, 247)
+    Public GRAY As Color = Color.FromArgb(MAX_ALPHA, 79, 85, 91)
+    Public GRAY_LIGHT As Color = Color.FromArgb(MAX_ALPHA, 107, 121, 141)
+    Public SKYBLUE As Color = Color.FromArgb(MAX_ALPHA, 74, 140, 234)
 
     'font
     Public font_munro As PrivateFontCollection = New PrivateFontCollection()
+    Public font_12 As Font
     Public font_16 As Font
     Public font_32 As Font
     Public strFormat As New StringFormat
 
     'image
-    Public spr_character As Sprite = GetSprite("character.png")
+    Public spr_player As Sprite = GetSprite("player.png")
+
+    'player
+
+    Public lv, exp_present, exp_required As UInteger
+
+    Public hp_max, hp As UInteger
+    Public hp_regen, defense, exp_bonus As Int16
+
+    Public atk_dam As UInteger
+    Public atk_reload As Double
+    Public atk_spd, atk_num, atk_size, atk_range, atk_penetrate, atk_explosion, critical, critical_dam As Int16
+
+    Public speed As UInt16
+
+    Public player_hspeed, player_vspeed As Integer
+    Public playerMove As Boolean = False
+
+    'background
+    Public bg_x, bg_y As Integer
+
+    Public Sub SetValue()
+        Dim strFontName As String = Application.ExecutablePath
+        strFontName = strFontName.Substring(0, strFontName.LastIndexOf("\bin")) & "\font\munro.ttf"
+
+        font_munro.AddFontFile(strFontName)
+        font_12 = New Font(font_munro.Families(0), 12)
+        font_16 = New Font(font_munro.Families(0), 16)
+        font_32 = New Font(font_munro.Families(0), 32)
+
+        strFormat.LineAlignment = StringAlignment.Center
+        strFormat.Alignment = StringAlignment.Center
+    End Sub
 
     Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite As Sprite, ByVal x As Integer, ByVal y As Integer)
         g.DrawImage(sprite.spr, x - sprite.width \ 2, y - sprite.height \ 2)
@@ -38,10 +69,10 @@ Module Module_main
         End Using
     End Sub
 
-    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point, ByVal color As Color, ByVal alpha As Int16)
+    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point, ByVal color As Color, ByVal alpha As Int16, Optional size As Int16 = 2)
         Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
-        Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, 2)
+        Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, size)
             g.DrawLine(pen, pnt_x, pnt_y)
         End Using
     End Sub

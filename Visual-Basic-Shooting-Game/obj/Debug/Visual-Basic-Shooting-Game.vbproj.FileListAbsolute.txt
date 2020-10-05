@@ -16,7 +16,6 @@ D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooti
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
 D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\character.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\character.png
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.resx
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Sprite.vb
