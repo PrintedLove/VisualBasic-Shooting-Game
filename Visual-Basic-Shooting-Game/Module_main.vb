@@ -24,9 +24,10 @@ Module Module_main
 
     'image
     Public spr_player As Sprite = GetSprite("player.png")
+    Public spr_hpBar As Sprite = GetSprite("hpBar.png")
+    Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
 
     'player
-
     Public lv, exp_present, exp_required As UInteger
 
     Public hp_max, hp As UInteger
@@ -61,6 +62,10 @@ Module Module_main
         g.DrawImage(sprite.spr, x - sprite.width \ 2, y - sprite.height \ 2)
     End Sub
 
+    Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite_sheet As SpriteSheet, ByVal index As Int16, ByVal x As Integer, ByVal y As Integer)
+        g.DrawImage(sprite_sheet.spr_sheet(index), x - sprite_sheet.width \ 2, y - sprite_sheet.height \ 2)
+    End Sub
+
     Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer, ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
         Dim text_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
@@ -93,6 +98,34 @@ Module Module_main
             img.Dispose()
 
             Return New Sprite(bm, bm.Size.Width, bm.Size.Height)
+        Else
+            Throw New Exception(String.Format("Cannot load _image '{0}'", strImageName))
+            Return Nothing
+        End If
+    End Function
+
+    Public Function GetSprite(ByVal file_name As String, ByVal number As Int16) As SpriteSheet
+        Dim strImageName As String = Application.ExecutablePath
+
+        strImageName = strImageName.Substring(0, strImageName.LastIndexOf("\bin")) & "\image\" & file_name
+
+        If IO.File.Exists(strImageName) Then
+            Dim img As Image = Image.FromFile(strImageName)
+            Dim bm(number) As Bitmap
+            Dim xsize = img.Width \ number
+            Dim ysize = img.Height
+
+            For index As Integer = 0 To number
+                bm(index) = New Bitmap(xsize, ysize)
+
+                Using g As Graphics = Graphics.FromImage(bm(index))
+                    g.DrawImage(img, 0, 0, New RectangleF(index * xsize, 0, xsize, ysize), GraphicsUnit.Pixel)
+                End Using
+            Next
+
+            img.Dispose()
+
+            Return New SpriteSheet(bm, xsize, ysize)
         Else
             Throw New Exception(String.Format("Cannot load _image '{0}'", strImageName))
             Return Nothing

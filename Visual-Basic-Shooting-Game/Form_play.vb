@@ -52,7 +52,7 @@ Public Class Form_play
         exp_required = 100
 
         hp_max = 100
-        hp = 0
+        hp = 100
         hp_regen = 0
         defense = 0
 
@@ -131,11 +131,17 @@ Public Class Form_play
             DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
             DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
 
+            'Draw HP Bar
+            DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
+            DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max), S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
+
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
 
             'Draw Player
             DrawSprite(g, spr_player, S_WIDTH \ 2, S_HEIGHT \ 2)
+
+            'DrawSprite(g, spr_skillicon, 1, 240, S_HEIGHT \ 2)
 
             'DrawText(g, CStr(exp_required), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
         End Using
@@ -198,7 +204,7 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
         playerMove = True
-        exp_present += 100
+        hp -= 5
     End Sub
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp

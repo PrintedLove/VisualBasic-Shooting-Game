@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="SpriteSheet.vb" />
     <Compile Include="Enemy.vb" />
     <Compile Include="Module_main.vb" />
     <Compile Include="Sprite.vb">
@@ -139,6 +140,7 @@
   <ItemGroup>
     <Content Include="image\hpBar.png" />
     <Content Include="image\player.png" />
+    <Content Include="image\skillicon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
