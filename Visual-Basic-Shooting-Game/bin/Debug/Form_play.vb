@@ -3,24 +3,25 @@
 'Blog: https://printed.tistory.com
 'YouTube: https://www.youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ?view_as=subscriber
 
-Imports System.Drawing.Text
 Imports System.ComponentModel
 Imports System.Math
-'Imports Microsoft.VisualBasic.Devices
+Imports System.Threading
 
 Public Class Form_play
 
     'picturebox bitmap
-    Dim screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
+    Private screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
-    'game control value
-    Dim isRunning As Boolean = True
-    Dim isGameOver As Boolean = False
+    'game control
+    Private isRunning As Boolean = True
+    Private isGameOver As Boolean = False
 
-    'game FPS, timer
-    Dim tick, tick_start As ULong
-    Dim tick_recent As ULong = 0
-    Dim playtime_m, playtime_s As UInteger
+    Private timer_main As Thread
+
+    Private tick, tick_start As ULong
+    Private tick_recent As ULong = 0
+    Private gameTick_before As UInt16 = 0
+    Private playtime_m, playtime_s As UInteger
 
     Private Sub Form_play_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Text = "Visual Basic Shooting Game"
@@ -29,6 +30,7 @@ Public Class Form_play
         Height = S_HEIGHT
         PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
 
+        'picture box initialize
         Dim bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
         screen_bmp.Dispose()
@@ -42,11 +44,20 @@ Public Class Form_play
         PictureBox_play.Image = bmp
         PictureBox_play.Refresh()
 
+        'main timer thread
+        timer_main = New Thread(AddressOf timerMain) With {
+            .IsBackground = True
+        }
+
+        'start gameloop
         SetValue()
         NewGame()
     End Sub
 
     Private Sub NewGame()
+        isRunning = True
+        isGameOver = False
+
         lv = 1
         exp_present = 0
         exp_required = 100
@@ -77,13 +88,15 @@ Public Class Form_play
         bg_x = 0
         bg_y = 0
 
-        StartGameLoop()
+        tick_start = DateTime.Now.Ticks     'start tick initialise
+        tick_recent = 0
+        gameTick = 0
+        gameTick_before = 0
+        timer_main.Start()
     End Sub
 
-    Private Sub StartGameLoop()
-        tick_start = DateTime.Now.Ticks     'start tick initialise
-
-        Do While isRunning = True
+    Private Sub timerMain()
+        Do
             tick = DateTime.Now.Ticks       'current time tick
 
             If tick > tick_recent + 100000 Then     'initialize every 0.01 Sec
@@ -92,14 +105,23 @@ Public Class Form_play
                 playtime_m = playtime_s \ 60
                 playtime_s = playtime_s Mod 60
 
-                Application.DoEvents()
+                If gameTick < 99 Then
+                    gameTick += 1
+                Else
+                    gameTick = 0
+                End If
 
                 GameEvent()
-                DrawGraphics()
             End If
         Loop
+    End Sub
 
-        Close()
+    Private Sub GameEvent()
+        Application.DoEvents()
+
+        BackgroundControl()
+        PlayerControl()
+        DrawGraphics()
     End Sub
 
     Private Sub DrawGraphics()
@@ -139,7 +161,8 @@ Public Class Form_play
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
 
             'Draw Player
-            DrawSprite(g, spr_player, S_WIDTH \ 2, S_HEIGHT \ 2)
+            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed, S_HEIGHT \ 2 - player_vspeed)
+            DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
 
             'DrawSprite(g, spr_skillicon, 1, 240, S_HEIGHT \ 2)
 
@@ -150,11 +173,6 @@ Public Class Form_play
             PictureBox_play.Image = bmp
             PictureBox_play.Refresh()
         End If
-    End Sub
-
-    Private Sub GameEvent()
-        BackgroundControl()
-        PlayerControl()
     End Sub
 
     Private Sub BackgroundControl()
@@ -204,11 +222,11 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
         playerMove = True
-        hp -= 5
     End Sub
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
         playerMove = False
+        exp_present += 10
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed

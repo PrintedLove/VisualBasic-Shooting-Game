@@ -2,6 +2,9 @@
 Imports System.Math
 
 Module Module_main
+    'game
+    Public gameTick As Int16 = 0
+
     'screen
     Public S_WIDTH As Int16 = 640
     Public S_HEIGHT As Int16 = 640
@@ -23,7 +26,8 @@ Module Module_main
     Public strFormat As New StringFormat
 
     'image
-    Public spr_player As Sprite = GetSprite("player.png")
+    Public spr_player_core As Sprite = GetSprite("player_core.png")
+    Public spr_player_body As Sprite = GetSprite("player_body.png")
     Public spr_hpBar As Sprite = GetSprite("hpBar.png")
     Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
 

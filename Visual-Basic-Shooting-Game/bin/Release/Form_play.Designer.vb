@@ -28,7 +28,7 @@ Partial Class Form_play
         '
         'PictureBox_play
         '
-        Me.PictureBox_play.Location = New System.Drawing.Point(-8, -32)
+        Me.PictureBox_play.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox_play.Margin = New System.Windows.Forms.Padding(0)
         Me.PictureBox_play.Name = "PictureBox_play"
         Me.PictureBox_play.Size = New System.Drawing.Size(640, 640)
