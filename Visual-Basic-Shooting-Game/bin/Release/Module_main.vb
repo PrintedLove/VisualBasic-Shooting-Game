@@ -33,7 +33,7 @@ Module Module_main
     Public spr_player_body As Sprite = GetSprite("player_body.png")
     Public spr_hpBar As Sprite = GetSprite("hpBar.png")
     Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
-    Public spr_item As SpriteSheet = GetSprite("item.png", 4)
+    Public spr_expBall As SpriteSheet = GetSprite("expBall.png", 3)
 
     'object list
     Public obj_list As List(Of Object) = New List(Of Object) From {}
