@@ -31,7 +31,7 @@ Partial Class Form_play
         Me.PictureBox_play.Location = New System.Drawing.Point(0, 0)
         Me.PictureBox_play.Margin = New System.Windows.Forms.Padding(0)
         Me.PictureBox_play.Name = "PictureBox_play"
-        Me.PictureBox_play.Size = New System.Drawing.Size(640, 640)
+        Me.PictureBox_play.Size = New System.Drawing.Size(960, 960)
         Me.PictureBox_play.TabIndex = 0
         Me.PictureBox_play.TabStop = False
         '
@@ -39,7 +39,7 @@ Partial Class Form_play
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(624, 601)
+        Me.ClientSize = New System.Drawing.Size(944, 921)
         Me.Controls.Add(Me.PictureBox_play)
         Me.Name = "Form_play"
         Me.Text = "Form_play"

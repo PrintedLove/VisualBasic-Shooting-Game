@@ -176,7 +176,7 @@ Public Class Form_play
 
     Private Sub ObjectControl()
         For Each obj As Object In obj_list
-            obj.Move(player_hspeed, player_vspeed)
+            obj.DefaultEvent()
         Next
     End Sub
 

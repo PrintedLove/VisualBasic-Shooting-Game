@@ -33,7 +33,7 @@ Module Module_main
     Public spr_player_body As Sprite = GetSprite("player_body.png")
     Public spr_hpBar As Sprite = GetSprite("hpBar.png")
     Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
-    Public spr_expBall As SpriteSheet = GetSprite("expBall.png", 3)
+    Public spr_item As SpriteSheet = GetSprite("item.png", 4)
 
     'object list
     Public obj_list As List(Of Object) = New List(Of Object) From {}
@@ -71,8 +71,7 @@ Module Module_main
     End Sub
 
     Public Sub CreateEnemy()
-        Dim obj As Object
-        obj = New Enemy
+        Dim obj As Object = New Enemy
 
         obj_list.Add(obj)
         enemy_list.Add(obj)
@@ -152,20 +151,15 @@ Module Module_main
         End If
     End Function
 
+    Public Function GetDistanceTwoPoint(ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer)
+        Return Sqrt(Pow(x2 - x1, 2) + Pow(y2 - y1, 2))
+    End Function
+
     Public Function GetAngleTwoPoint(ByVal x1 As Integer, ByVal y1 As Integer, ByVal x2 As Integer, ByVal y2 As Integer)
-        Dim dx As Integer = x2 - x1
-        Dim dy As Integer = y2 - y1
-
-        Dim angle As Double = Atan2(dy, dx)
-
-        Return angle
+        Return Atan2(y2 - y1, x2 - x1)
     End Function
 
     Public Function GetCoordCircle(ByVal x As Integer, ByVal y As Integer, ByVal dgree As Double, ByVal radius As Integer)
-        Dim circle_x As Integer = x + CInt(Cos(dgree) * radius)
-        Dim circle_y As Integer = y + CInt(Sin(dgree) * radius)
-        Dim circle_coord As New Point(circle_x, circle_y)
-
-        Return circle_coord
+        Return New Point(x + CInt(Cos(dgree) * radius), y + CInt(Sin(dgree) * radius))
     End Function
 End Module

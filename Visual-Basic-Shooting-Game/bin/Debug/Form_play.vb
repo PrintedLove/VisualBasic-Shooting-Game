@@ -6,6 +6,7 @@
 Imports System.ComponentModel
 Imports System.Math
 Imports System.Threading
+Imports Microsoft.VisualBasic.CompilerServices
 
 Public Class Form_play
 
@@ -17,11 +18,6 @@ Public Class Form_play
     Private isGameOver As Boolean = False
 
     Private timer_main As Thread
-
-    Private tick, tick_start As ULong
-    Private tick_recent As ULong = 0
-    Private gameTick_before As UInt16 = 0
-    Private playtime_m, playtime_s As UInteger
 
     Private Sub Form_play_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Text = "Visual Basic Shooting Game"
@@ -45,11 +41,11 @@ Public Class Form_play
         PictureBox_play.Refresh()
 
         'main timer thread
-        timer_main = New Thread(AddressOf timerMain) With {
+        timer_main = New Thread(AddressOf TimerMain) With {
             .IsBackground = True
         }
 
-        'start gameloop
+        'start game
         SetValue()
         NewGame()
     End Sub
@@ -88,20 +84,24 @@ Public Class Form_play
         bg_x = 0
         bg_y = 0
 
-        tick_start = DateTime.Now.Ticks     'start tick initialise
+        enemy_num = 0
+        item_num = 0
+        obj_list.Clear()
+
+        tick_start = DateTime.Now.Ticks
         tick_recent = 0
         gameTick = 0
-        gameTick_before = 0
+
         timer_main.Start()
     End Sub
 
-    Private Sub timerMain()
+    Private Sub TimerMain()
         Do
             tick = DateTime.Now.Ticks       'current time tick
 
             If tick > tick_recent + 100000 Then     'initialize every 0.01 Sec
                 tick_recent = tick
-                playtime_s = (tick - tick_start) \ 10000000      'playtime count
+                playtime_s = (tick_recent - tick_start) \ 10000000      'playtime count
                 playtime_m = playtime_s \ 60
                 playtime_s = playtime_s Mod 60
 
@@ -112,6 +112,14 @@ Public Class Form_play
                 End If
 
                 GameEvent()
+
+                If isGameOver Then
+                    timer_main.Abort()
+                End If
+
+                If Not isRunning Then
+                    Form_play_ToClose()
+                End If
             End If
         Loop
     End Sub
@@ -120,6 +128,7 @@ Public Class Form_play
         Application.DoEvents()
 
         BackgroundControl()
+        ObjectControl()
         PlayerControl()
         DrawGraphics()
     End Sub
@@ -139,14 +148,17 @@ Public Class Form_play
             'Draw Background Lines
             DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
             DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0), New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
 
-            If bg_x <> 0 Then
-                DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0), New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            End If
+            'Draw objects
+            For Each obj As Object In obj_list
+                obj.Draw(g)
+            Next
 
-            If bg_y <> 0 Then
-                DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
-            End If
+            'Draw Player
+            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed, S_HEIGHT \ 2 - player_vspeed)
+            DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
 
             'Draw LV, EXP Bar
             DrawText(g, "HP", 15, 15, font_16, WHITE, MAX_ALPHA)
@@ -160,22 +172,41 @@ Public Class Form_play
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
 
-            'Draw Player
-            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed, S_HEIGHT \ 2 - player_vspeed)
-            DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
-
-            'DrawSprite(g, spr_skillicon, 1, 240, S_HEIGHT \ 2)
-
-            'DrawText(g, CStr(exp_required), S_WIDTH \ 2, 150, font_16, WHITE, MAX_ALPHA)
+            DrawText(g, CStr(item_num), 200, 200, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
-            PictureBox_play.Image = bmp
-            PictureBox_play.Refresh()
+            PictuerBox_play_SetImage(bmp)
+        End If
+    End Sub
+
+    Private Sub ObjectControl()
+        Dim list_index As Int16 = 0
+
+        While list_index < obj_list.Count()
+            obj_list.Item(list_index).DefaultEvent()
+
+            If obj_list.Item(list_index).kill Then
+                obj_list.Item(list_index).Die()
+
+                Select Case obj_list.Item(list_index).type
+                    Case 0 To 3
+                        item_num -= 1
+                End Select
+
+                obj_list.RemoveAt(list_index)
+            Else
+                list_index += 1
+            End If
+        End While
+
+        If item_num < 16 Then
+            CreateObject(2)
         End If
     End Sub
 
     Private Sub BackgroundControl()
+        'Background Line Move
         bg_x += player_hspeed
         bg_y += player_vspeed
 
@@ -216,6 +247,29 @@ Public Class Form_play
         End If
     End Sub
 
+    Delegate Sub ToClose()
+
+    Delegate Sub SetImage(ByVal img As Bitmap)
+
+    Private Sub Form_play_ToClose()
+        If InvokeRequired Then
+            Dim c As ToClose = New ToClose(AddressOf Form_play_ToClose)
+            Me.Invoke(c)
+        Else
+            Close()
+        End If
+    End Sub
+
+    Private Sub PictuerBox_play_SetImage(ByVal img As Bitmap)
+        If Me.PictureBox_play.InvokeRequired Then
+            Dim si As SetImage = New SetImage(AddressOf PictuerBox_play_SetImage)
+            Me.Invoke(si, img)
+        Else
+            PictureBox_play.Image = img
+            PictureBox_play.Refresh()
+        End If
+    End Sub
+
     Private Sub PictureBox_play_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseMove
         mouse_coord = e.Location
     End Sub
@@ -226,12 +280,12 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
         playerMove = False
-        exp_present += 10
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         screen_bmp.Dispose()
         PictureBox_play.Dispose()
+        timer_main.Abort()
     End Sub
 
     Private Sub Form_play_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing

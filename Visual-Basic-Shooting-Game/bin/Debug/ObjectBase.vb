@@ -1,12 +1,17 @@
 ﻿Public Class ObjectBase
+    Implements IDisposable
+
+    Protected disposed As Boolean = False
+    Public kill As Boolean = False
+
     Public coord As Point
     Public spr As SpriteSheet
     Public spr_index As Int16
+    Public type As Int16
     Public random As Random
 
     Sub New()
-        random = New Random(gameTick)
-        coord = GetCoordCircle(S_WIDTH \ 2, S_HEIGHT \ 2, random.Next(0, 360) * 180 / Math.PI, S_WIDTH)
+        random = New Random()
     End Sub
 
     Sub Draw(ByVal g As Graphics)
@@ -20,18 +25,33 @@
         coord.Y += player_vspeed
 
         If GetDistanceTwoPoint(coord.X, coord.Y, S_WIDTH \ 2, S_HEIGHT \ 2) > S_WIDTH * 2 Then
-            Die()
+            kill = True
         End If
     End Sub
 
     Sub Die()
-        obj_list.Remove(MyBase.ToString)
-        enemy_list.Remove(MyBase.ToString)
         Finalize()
     End Sub
 
-    Protected Overloads Sub Finalize()
+    Protected Overridable Sub Dispose(ByVal disposing As Boolean)
+        If Not Me.disposed Then
+            If disposing Then
+                coord = Nothing
+                spr = Nothing
+                random = Nothing
+            End If
+
+        End If
+        Me.disposed = True
+    End Sub
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+        Dispose(True)
+        GC.SuppressFinalize(Me)
+    End Sub
+
+    Protected Overrides Sub Finalize()
+        Dispose(False)
         MyBase.Finalize()
-        Debug.WriteLine("객체 소멸")
     End Sub
 End Class

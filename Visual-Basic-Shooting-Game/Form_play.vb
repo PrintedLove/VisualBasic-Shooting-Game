@@ -84,6 +84,10 @@ Public Class Form_play
         bg_x = 0
         bg_y = 0
 
+        enemy_num = 0
+        item_num = 0
+        obj_list.Clear()
+
         tick_start = DateTime.Now.Ticks
         tick_recent = 0
         gameTick = 0
@@ -167,6 +171,8 @@ Public Class Form_play
 
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
+
+            DrawText(g, CStr(item_num), 200, 200, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
@@ -175,9 +181,28 @@ Public Class Form_play
     End Sub
 
     Private Sub ObjectControl()
-        For Each obj As Object In obj_list
-            obj.Move(player_hspeed, player_vspeed)
-        Next
+        Dim list_index As Int16 = 0
+
+        While list_index < obj_list.Count()
+            obj_list.Item(list_index).DefaultEvent()
+
+            If obj_list.Item(list_index).kill Then
+                obj_list.Item(list_index).Die()
+
+                Select Case obj_list.Item(list_index).type
+                    Case 0 To 3
+                        item_num -= 1
+                End Select
+
+                obj_list.RemoveAt(list_index)
+            Else
+                list_index += 1
+            End If
+        End While
+
+        If item_num < 16 Then
+            CreateObject(2)
+        End If
     End Sub
 
     Private Sub BackgroundControl()
@@ -251,7 +276,6 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
         playerMove = True
-        CreateEnemy()
     End Sub
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
