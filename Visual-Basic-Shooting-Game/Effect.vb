@@ -7,7 +7,11 @@
 
         type = random.Next(0, 4)
         spr_index = type
-        coord.X = x
-        coord.Y = y
+        rec.X = x
+        rec.Y = y
+    End Sub
+
+    Sub IndividualEvent()
+        DefaultEvent()
     End Sub
 End Class

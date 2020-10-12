@@ -161,9 +161,9 @@ Public Class Form_play
             DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
 
             'Draw LV, EXP Bar
-            DrawText(g, "HP", 15, 15, font_16, WHITE, MAX_ALPHA)
             DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
             DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
+            DrawText(g, "LV. " & CStr(lv), 40, 15, font_16, WHITE, MAX_ALPHA)
 
             'Draw HP Bar
             DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
@@ -171,8 +171,6 @@ Public Class Form_play
 
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
-
-            DrawText(g, CStr(item_num), 200, 200, font_16, WHITE, MAX_ALPHA)
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
@@ -181,10 +179,11 @@ Public Class Form_play
     End Sub
 
     Private Sub ObjectControl()
+        'object event
         Dim list_index As Int16 = 0
 
         While list_index < obj_list.Count()
-            obj_list.Item(list_index).DefaultEvent()
+            obj_list.Item(list_index).IndividualEvent()
 
             If obj_list.Item(list_index).kill Then
                 obj_list.Item(list_index).Die()
@@ -200,6 +199,7 @@ Public Class Form_play
             End If
         End While
 
+        'item object number control
         If item_num < 16 Then
             CreateObject(2)
         End If
@@ -227,6 +227,18 @@ Public Class Form_play
             lv += 1
             exp_present = exp_excess
             exp_required = Round(exp_required * 1.01 + 25)
+        End If
+
+        If gameTick = 0 Then
+
+            'Check HP
+            If hp < hp_max Then
+                hp += hp_regen
+
+                If hp > hp_max Then
+                    hp = hp_max
+                End If
+            End If
         End If
 
         'Move Control

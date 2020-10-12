@@ -51,6 +51,7 @@ Module Module_main
 
     Public speed As UInt16
 
+    Public player_rec As Rectangle
     Public player_hspeed, player_vspeed As Integer
     Public playerMove As Boolean = False
 
@@ -68,6 +69,8 @@ Module Module_main
 
         strFormat.LineAlignment = StringAlignment.Center
         strFormat.Alignment = StringAlignment.Center
+
+        player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
     End Sub
 
     Public Sub CreateObject(ByVal obj_type As Integer, Optional x As Integer = 0, Optional y As Integer = 0)

@@ -4,7 +4,7 @@
     Protected disposed As Boolean = False
     Public kill As Boolean = False
 
-    Public coord As Point
+    Public rec As Rectangle
     Public spr As SpriteSheet
     Public spr_index As Int16
     Public type As Int16
@@ -15,16 +15,16 @@
     End Sub
 
     Sub Draw(ByVal g As Graphics)
-        If -spr.width \ 2 < coord.X < S_WIDTH + spr.width \ 2 And -spr.height \ 2 < coord.Y < S_HEIGHT + spr.height \ 2 Then
-            DrawSprite(g, spr, spr_index, coord.X, coord.Y)
+        If -spr.width \ 2 < rec.X < S_WIDTH + spr.width \ 2 And -spr.height \ 2 < rec.Y < S_HEIGHT + spr.height \ 2 Then
+            DrawSprite(g, spr, spr_index, rec.X, rec.Y)
         End If
     End Sub
 
     Sub DefaultEvent()
-        coord.X += player_hspeed
-        coord.Y += player_vspeed
+        rec.X += player_hspeed
+        rec.Y += player_vspeed
 
-        If GetDistanceTwoPoint(coord.X, coord.Y, S_WIDTH \ 2, S_HEIGHT \ 2) > S_WIDTH * 2 Then
+        If GetDistanceTwoPoint(rec.X, rec.Y, S_WIDTH \ 2, S_HEIGHT \ 2) > S_WIDTH * 2 Then
             kill = True
         End If
     End Sub
@@ -36,7 +36,7 @@
     Protected Overridable Sub Dispose(ByVal disposing As Boolean)
         If Not Me.disposed Then
             If disposing Then
-                coord = Nothing
+                rec = Nothing
                 spr = Nothing
                 random = Nothing
             End If
