@@ -3,10 +3,13 @@ Imports System.Math
 
 
 Module Module_main
-    'timer
+    'game
+    Public difficulty, stage As Int16
     Public gameTick As Int16 = 0
-    Public tick, tick_recent, tick_start As ULong
+    Public tick, tick_recent, tick_start, tick_attack As ULong
     Public playtime_m, playtime_s As UInteger
+    Public EnemyDistance As UInteger
+    Public nearestEnemyIndex As Int16
 
     'screen
     Public S_WIDTH As Int16 = 960
@@ -34,15 +37,39 @@ Module Module_main
     Public spr_hpBar As Sprite = GetSprite("hpBar.png")
     Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
     Public spr_item As SpriteSheet = GetSprite("item.png", 4)
+    Public spr_enemy As SpriteSheet = GetSprite("enemy.png", 7)
+    Public spr_attack As SpriteSheet = GetSprite("attack.png", 4)
 
-    'object list
+    'object
     Public obj_list As List(Of Object) = New List(Of Object) From {}
-    Public enemy_num, item_num As UInt16
+    Public enemy_num, enemy_numMax, item_num As UInt16
+    Public enemy_spon =                 'enemy spon Probability of spawning enemies by stage
+        {{100, 0, 0, 0, 0, 0, 0, 24},
+        {95, 5, 0, 0, 0, 0, 0, 28},
+        {90, 10, 0, 0, 0, 0, 0, 32},
+        {80, 10, 0, 10, 0, 0, 0, 36},
+        {70, 10, 0, 20, 0, 0, 0, 36},
+        {60, 15, 5, 20, 0, 0, 0, 40},
+        {45, 20, 5, 20, 5, 5, 0, 42},
+        {30, 25, 10, 15, 10, 10, 0, 44},
+        {20, 20, 20, 10, 15, 10, 5, 46},
+        {10, 15, 30, 5, 20, 10, 10, 48}}
+
+    Public timeToDif =                  'Time of stage up (depending on difficulty level)
+        {{0.5, 1, 1.5, 2, 3, 5, 7, 10, 14, 18},
+        {0.4, 0.8, 1.2, 1.75, 2.5, 4, 6, 8, 11, 15},
+        {0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5, 7, 10}}
+
+    Public hpToDif =
+        {{20, 100, 500, 15, 75, 50, 300},
+        {25, 150, 750, 20, 100, 75, 500},
+        {40, 250, 1500, 35, 200, 150, 750}}
 
     'player
     Public lv, exp_present, exp_required As UInteger
 
-    Public hp_max, hp As UInteger
+    Public hp_max As UInteger
+    Public hp As Integer
     Public hp_regen, defense, exp_bonus As Int16
 
     Public atk_dam As UInteger
@@ -71,6 +98,8 @@ Module Module_main
         strFormat.Alignment = StringAlignment.Center
 
         player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
+
+        difficulty = 1
     End Sub
 
     Public Sub CreateObject(ByVal obj_type As Integer, Optional x As Integer = 0, Optional y As Integer = 0)
@@ -86,7 +115,11 @@ Module Module_main
                 obj_list.Add(obj)
                 item_num += 1
             Case 3
-                obj = New Effect(x, y)
+                obj = New Effect(True, S_WIDTH \ 2, S_HEIGHT \ 2,
+                                 obj_list.Item(nearestEnemyIndex).rec.X, obj_list.Item(nearestEnemyIndex).rec.Y)
+                obj_list.Add(obj)
+            Case 4
+                obj = New Effect(False, x, y)
                 obj_list.Add(obj)
         End Select
     End Sub
@@ -100,11 +133,13 @@ Module Module_main
         g.DrawImage(sprite.spr, x - sprite.width \ 2, y - sprite.height \ 2)
     End Sub
 
-    Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite_sheet As SpriteSheet, ByVal index As Int16, ByVal x As Integer, ByVal y As Integer)
+    Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite_sheet As SpriteSheet,
+                          ByVal index As Int16, ByVal x As Integer, ByVal y As Integer)
         g.DrawImage(sprite_sheet.spr(index), x - sprite_sheet.width \ 2, y - sprite_sheet.height \ 2)
     End Sub
 
-    Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer, ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
+    Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer,
+                        ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
         Dim text_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
         Using brush As Brush = New Drawing.SolidBrush(text_color), f As Font = New Font(fnt.FontFamily, fnt.Size, fnt.Style)
@@ -112,7 +147,8 @@ Module Module_main
         End Using
     End Sub
 
-    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point, ByVal color As Color, ByVal alpha As Int16, Optional size As Int16 = 2)
+    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point,
+                        ByVal color As Color, ByVal alpha As Int16, Optional size As Int16 = 2)
         Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
         Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, size)

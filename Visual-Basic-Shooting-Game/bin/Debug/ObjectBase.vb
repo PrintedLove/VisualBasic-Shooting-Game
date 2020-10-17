@@ -3,6 +3,7 @@
 
     Protected disposed As Boolean = False
     Public kill As Boolean = False
+    Public index As Int16
 
     Public rec As Rectangle
     Public spr As SpriteSheet
@@ -24,7 +25,7 @@
         rec.X += player_hspeed
         rec.Y += player_vspeed
 
-        If GetDistanceTwoPoint(rec.X, rec.Y, S_WIDTH \ 2, S_HEIGHT \ 2) > S_WIDTH * 2 Then
+        If rec.X < -S_WIDTH * 2 Or rec.X > S_WIDTH * 3 Or rec.Y < -S_HEIGHT * 2 Or rec.Y > S_HEIGHT * 3 Then
             kill = True
         End If
     End Sub
@@ -52,7 +53,6 @@
 
     Protected Overrides Sub Finalize()
         Dispose(False)
-        'Debug.WriteLine("object finalized")
         MyBase.Finalize()
     End Sub
 End Class

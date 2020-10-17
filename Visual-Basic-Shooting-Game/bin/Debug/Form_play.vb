@@ -1,4 +1,5 @@
 ﻿'[Visual Basic] Visual Basic Shooting Game
+
 'made by - Printed Love
 'Blog: https://printed.tistory.com
 'YouTube: https://www.youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ?view_as=subscriber
@@ -54,6 +55,8 @@ Public Class Form_play
         isRunning = True
         isGameOver = False
 
+        stage = 0
+
         lv = 1
         exp_present = 0
         exp_required = 100
@@ -65,17 +68,17 @@ Public Class Form_play
 
         atk_dam = 10
         atk_reload = 1
-        atk_spd = 1
+        atk_spd = 10
         atk_num = 1
         atk_size = 1
-        atk_range = 10
+        atk_range = 200
         atk_penetrate = 0
         atk_explosion = 0
 
         critical = 0
         critical_dam = 150
 
-        speed = 3
+        speed = 10
 
         player_hspeed = 0
         player_vspeed = 0
@@ -85,11 +88,14 @@ Public Class Form_play
         bg_y = 0
 
         enemy_num = 0
+        enemy_numMax = 24
         item_num = 0
         obj_list.Clear()
+        EnemyDistance = 9999
 
         tick_start = DateTime.Now.Ticks
         tick_recent = 0
+        tick_attack = 0
         gameTick = 0
 
         timer_main.Start()
@@ -99,7 +105,7 @@ Public Class Form_play
         Do
             tick = DateTime.Now.Ticks       'current time tick
 
-            If tick > tick_recent + 100000 Then     'initialize every 0.01 Sec
+            If tick > tick_recent + 333333 Then     'initialize every 0.03 Sec
                 tick_recent = tick
                 playtime_s = (tick_recent - tick_start) \ 10000000      'playtime count
                 playtime_m = playtime_s \ 60
@@ -120,6 +126,12 @@ Public Class Form_play
                 If Not isRunning Then
                     Form_play_ToClose()
                 End If
+            End If
+
+            If EnemyDistance <= atk_range And tick > tick_attack + atk_reload * 10000000 Then
+                tick_attack = tick
+                EnemyDistance = 9999
+                CreateObject(3)
             End If
         Loop
     End Sub
@@ -148,8 +160,10 @@ Public Class Form_play
             'Draw Background Lines
             DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
             DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0), New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0),
+                     New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2),
+                     New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
 
             'Draw objects
             For Each obj As Object In obj_list
@@ -157,7 +171,7 @@ Public Class Form_play
             Next
 
             'Draw Player
-            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed, S_HEIGHT \ 2 - player_vspeed)
+            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed \ 2, S_HEIGHT \ 2 - player_vspeed \ 2)
             DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
 
             'Draw LV, EXP Bar
@@ -167,7 +181,8 @@ Public Class Form_play
 
             'Draw HP Bar
             DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
-            DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max), S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
+            DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max),
+                                                                                  S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
 
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
@@ -183,14 +198,19 @@ Public Class Form_play
         Dim list_index As Int16 = 0
 
         While list_index < obj_list.Count()
-            obj_list.Item(list_index).IndividualEvent()
+            Dim obj As Object = obj_list.Item(list_index)
+            obj.Index = list_index
+            obj.IndividualEvent()
 
-            If obj_list.Item(list_index).kill Then
-                obj_list.Item(list_index).Die()
+            If obj.kill Then
+                obj.Die()
 
-                Select Case obj_list.Item(list_index).type
-                    Case 0 To 3
+                Select Case obj.type
+                    Case 0 To 9
                         item_num -= 1
+
+                    Case 10 To 99
+                        enemy_num -= 1
                 End Select
 
                 obj_list.RemoveAt(list_index)
@@ -199,7 +219,12 @@ Public Class Form_play
             End If
         End While
 
-        'item object number control
+        'enemy object create,  number control
+        If enemy_num < enemy_numMax And gameTick Mod 25 = 0 Then
+            CreateObject(1)
+        End If
+
+        'item object create, number control
         If item_num < 16 Then
             CreateObject(2)
         End If
@@ -233,7 +258,9 @@ Public Class Form_play
 
             'Check HP
             If hp < hp_max Then
-                hp += hp_regen
+                If hp_regen > 0 Then
+                    hp += hp_regen
+                End If
 
                 If hp > hp_max Then
                     hp = hp_max
