@@ -5,6 +5,7 @@ Public Class Enemy : Inherits ObjectBase
     Private enemyHp As Integer
     Private enemyspd, damage_touch, damage_shot As Int16
     Private touchKill As Boolean = False
+    Private isPlayerKill As Boolean = False
 
     Sub New()
         spr = spr_enemy
@@ -32,31 +33,31 @@ Public Class Enemy : Inherits ObjectBase
         Select Case type
             Case 10                              'normal_small
                 rec.Size = New Point(28, 28)
-                enemyspd = 7
+                enemyspd = 5 + random.Next(0, 2)
             Case 11                              'normal_medium
-                rec.Size = New Point(65, 65)
-                enemyspd = 6
+                rec.Size = New Point(55, 55)
+                enemyspd = 7 + random.Next(0, 2)
             Case 12                              'normal_big
-                rec.Size = New Point(120, 120)
-                enemyspd = 5
+                rec.Size = New Point(100, 100)
+                enemyspd = 9 + random.Next(0, 2)
             Case 13                              'rush_small
-                rec.Size = New Point(13, 13)
+                rec.Size = New Point(20, 20)
                 damage_touch = 20
-                enemyspd = 15
+                enemyspd = 12
                 touchKill = True
             Case 14                              'rush_big
-                rec.Size = New Point(25, 25)
+                rec.Size = New Point(35, 35)
                 damage_touch = 30
                 enemyspd = 12
                 touchKill = True
             Case 15                              'shoter_small
-                rec.Size = New Point(31, 31)
-                damage_shot = 10
-                enemyspd = 10
+                rec.Size = New Point(30, 30)
+                damage_shot = 15
+                enemyspd = 15
             Case 16                              'shoter_big
-                rec.Size = New Point(31, 31)
-                damage_shot = 10
-                enemyspd = 8
+                rec.Size = New Point(30, 30)
+                damage_shot = 15
+                enemyspd = 15
         End Select
 
         enemyHp = hpToDif(difficulty - 1, type - 10)
@@ -75,10 +76,11 @@ Public Class Enemy : Inherits ObjectBase
         'hp manage
         If enemyHp < 1 Then
             kill = True
+            isPlayerKill = True
         End If
 
         'collision with player
-        If gameTick Mod 10 = 0 And rec.IntersectsWith(player_rec) Then
+        If kill = False And gameTick Mod 10 = 0 And rec.IntersectsWith(player_rec) Then
             If touchKill = True Then
                 kill = True
             End If
@@ -86,19 +88,19 @@ Public Class Enemy : Inherits ObjectBase
             hp -= damage_touch      'touch damage
         End If
 
-        If Not kill Then
+        If kill = False Then
             'collision with other(enemy, player attack)
             Dim list_index As Int16 = 0
 
             While list_index < obj_list.Count()
                 Dim obj As Object = obj_list.Item(list_index)
 
-                If 9 < obj.type And obj.type < 100 Then                   'collision with enemy
+                If 9 < obj.type And obj.type < 100 Then                     'collision with enemy
                     If Not obj.Equals(Me) And rec.IntersectsWith(obj.rec) Then
                         rec.X -= Sign(obj.rec.X - rec.X)
                         rec.Y -= Sign(obj.rec.Y - rec.Y)
                     End If
-                ElseIf obj.type = 100 Then                   'collision with player attack
+                ElseIf obj.type = 100 Then                                  'collision with player attack
                     If rec.IntersectsWith(obj.rec) Then
                         enemyHp -= atk_dam
                         obj.kill = True
@@ -109,11 +111,31 @@ Public Class Enemy : Inherits ObjectBase
             End While
 
             'is enemy in player attack distance
-            Dim distanceToPlayer As UInteger = GetDistanceTwoPoint(player_rec.X, player_rec.Y, rec.X, rec.Y)
+            Dim distanceToPlayer As Integer = GetDistanceTwoPoint(player_rec.X, player_rec.Y, rec.X, rec.Y)
 
             If EnemyDistance > distanceToPlayer Then
                 EnemyDistance = distanceToPlayer
                 nearestEnemyIndex = index
+            End If
+        Else
+            'kill reward
+            If isPlayerKill = True Then
+                Select Case type
+                    Case 10                              'normal_small
+                        exp_present += 1
+                    Case 11                              'normal_medium
+                        exp_present += 3
+                    Case 12                              'normal_big
+                        exp_present += 10
+                    Case 13                              'rush_small
+                        exp_present += 2
+                    Case 14                              'rush_big
+                        exp_present += 4
+                    Case 15                              'shoter_small
+                        exp_present += 5
+                    Case 16                              'shoter_big
+                        exp_present += 7
+                End Select
             End If
         End If
     End Sub

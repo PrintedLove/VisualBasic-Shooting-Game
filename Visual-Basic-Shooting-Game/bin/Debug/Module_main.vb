@@ -1,14 +1,13 @@
 ﻿Imports System.Drawing.Text
 Imports System.Math
 
-
 Module Module_main
     'game
     Public difficulty, stage As Int16
     Public gameTick As Int16 = 0
     Public tick, tick_recent, tick_start, tick_attack As ULong
     Public playtime_m, playtime_s As UInteger
-    Public EnemyDistance As UInteger
+    Public EnemyDistance As Integer
     Public nearestEnemyIndex As Int16
 
     'screen
@@ -43,7 +42,7 @@ Module Module_main
     'object
     Public obj_list As List(Of Object) = New List(Of Object) From {}
     Public enemy_num, enemy_numMax, item_num As UInt16
-    Public enemy_spon =                 'enemy spon Probability of spawning enemies by stage
+    Public enemy_spon =                 'enemy spon Probability by stage
         {{100, 0, 0, 0, 0, 0, 0, 24},
         {95, 5, 0, 0, 0, 0, 0, 28},
         {90, 10, 0, 0, 0, 0, 0, 32},
@@ -60,7 +59,7 @@ Module Module_main
         {0.4, 0.8, 1.2, 1.75, 2.5, 4, 6, 8, 11, 15},
         {0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5, 7, 10}}
 
-    Public hpToDif =
+    Public hpToDif =                    'enemy HP (depending on difficulty level)
         {{20, 100, 500, 15, 75, 50, 300},
         {25, 150, 750, 20, 100, 75, 500},
         {40, 250, 1500, 35, 200, 150, 750}}
@@ -102,24 +101,29 @@ Module Module_main
         difficulty = 1
     End Sub
 
-    Public Sub CreateObject(ByVal obj_type As Integer, Optional x As Integer = 0, Optional y As Integer = 0)
+    Public Sub CreateObject(ByVal obj_type As Int16, Optional x As Integer = 0, Optional y As Integer = 0)
         Dim obj As Object
 
         Select Case obj_type
-            Case 1
+            Case 1                  'enemy
                 obj = New Enemy
                 obj_list.Add(obj)
                 enemy_num += 1
-            Case 2
+            Case 2                  'item
                 obj = New Item
                 obj_list.Add(obj)
                 item_num += 1
-            Case 3
-                obj = New Effect(True, S_WIDTH \ 2, S_HEIGHT \ 2,
+            Case 3                  'player attack
+                If obj_list.Count > nearestEnemyIndex Then
+                    obj = New Effect(0, S_WIDTH \ 2, S_HEIGHT \ 2,
                                  obj_list.Item(nearestEnemyIndex).rec.X, obj_list.Item(nearestEnemyIndex).rec.Y)
+                    obj_list.Add(obj)
+                End If
+            Case 4                  'enemy attack
+                obj = New Effect(1, x, y)
                 obj_list.Add(obj)
-            Case 4
-                obj = New Effect(False, x, y)
+            Case 5                  'effect
+                obj = New Effect(2, x, y)
                 obj_list.Add(obj)
         End Select
     End Sub

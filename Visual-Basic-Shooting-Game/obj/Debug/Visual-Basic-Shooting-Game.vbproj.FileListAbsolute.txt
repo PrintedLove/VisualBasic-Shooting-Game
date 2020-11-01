@@ -1,26 +1,19 @@
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe.config
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.pdb
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.xml
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbprojAssemblyReference.cache
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Form_play.resources
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Resources.resources
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbproj.GenerateResource.cache
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.vbproj.CoreCompileInputs.cache
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.exe
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.xml
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.pdb
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.resx
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Sprite.vb
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.vb
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
-D:\프로그래밍\C\visual basic\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\character.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\enemy.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\hpBar.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\item.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\player_body.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\player_core.png
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\skillicon.png
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\font\munro.ttf
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.resx
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\ObjectBase.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\SpriteSheet.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Enemy.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Module_main.vb
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Sprite.vb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.vb
+C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe.config
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.exe
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Visual-Basic-Shooting-Game.pdb
@@ -33,14 +26,3 @@ C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Sh
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.exe
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.xml
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.pdb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\hpBar.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\player_body.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\player_core.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\skillicon.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\item.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\ObjectBase.vb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\SpriteSheet.vb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Enemy.vb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Module_main.vb
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\enemy.png
-C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack.png

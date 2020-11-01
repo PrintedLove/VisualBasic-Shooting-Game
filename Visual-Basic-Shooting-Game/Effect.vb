@@ -2,12 +2,12 @@
 
     Public hspeed, vspeed As Integer
 
-    Sub New(ByVal mode As Boolean, ByVal x As Integer, ByVal y As Integer,
+    Sub New(ByVal mode As Int16, ByVal x As Integer, ByVal y As Integer,
             Optional EnemyPointX As Integer = 0, Optional EnemyPointY As Integer = 0)
         MyBase.New()
 
-        If mode Then
-            type = 100
+        If mode = 0 Then
+            type = 100          'palyer attack
             spr = spr_attack
             spr_index = atk_size - 1
             rec.Size = New Point(3 + atk_size * 2, 3 + atk_size * 2)
@@ -17,8 +17,10 @@
 
             hspeed = moveCoord.X
             vspeed = moveCoord.Y
+        ElseIf mode = 1 Then
+            type = 101          'enemy attack
         Else
-            type = 101
+            type = 102          'effect
         End If
 
         rec.X = x

@@ -2,12 +2,11 @@
 
 'made by - Printed Love
 'Blog: https://printed.tistory.com
-'YouTube: https://www.youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ?view_as=subscriber
+'YouTube: https://youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ
 
 Imports System.ComponentModel
 Imports System.Math
 Imports System.Threading
-Imports Microsoft.VisualBasic.CompilerServices
 
 Public Class Form_play
 
@@ -88,7 +87,7 @@ Public Class Form_play
         bg_y = 0
 
         enemy_num = 0
-        enemy_numMax = 24
+        enemy_numMax = 48
         item_num = 0
         obj_list.Clear()
         EnemyDistance = 9999
@@ -105,6 +104,7 @@ Public Class Form_play
         Do
             tick = DateTime.Now.Ticks       'current time tick
 
+            'game event every gametick
             If tick > tick_recent + 333333 Then     'initialize every 0.03 Sec
                 tick_recent = tick
                 playtime_s = (tick_recent - tick_start) \ 10000000      'playtime count
@@ -128,6 +128,7 @@ Public Class Form_play
                 End If
             End If
 
+            'player attack
             If EnemyDistance <= atk_range And tick > tick_attack + atk_reload * 10000000 Then
                 tick_attack = tick
                 EnemyDistance = 9999
@@ -241,6 +242,11 @@ Public Class Form_play
 
         If (bg_y > S_HEIGHT \ 2 Or bg_y < -S_HEIGHT \ 2) Then
             bg_y -= Sign(bg_y) * S_HEIGHT \ 2
+        End If
+
+        'stage up by time
+        If stage < 9 And timeToDif(difficulty - 1, stage) < (tick_recent - tick_start) / 600000000 Then
+            stage += 1
         End If
     End Sub
 

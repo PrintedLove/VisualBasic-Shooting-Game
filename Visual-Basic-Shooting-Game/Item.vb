@@ -10,10 +10,10 @@
         If item_type < 3 Then           '2 %
             type = 2
         ElseIf item_type < 13 Then      '10 %
-            type = 3
-        ElseIf item_type < 23 Then      '10 %
             type = 1
-        Else                            '77 %
+        ElseIf item_type < 21 Then      '7 %
+            type = 3
+        Else                            '80 %
             type = 0
         End If
 
@@ -43,9 +43,9 @@
 
             Select Case type
                 Case 0
-                    exp_present += 10 + exp_required \ 100      'exp 10 + 1 %
+                    exp_present += 5 + exp_required \ 100      'exp 5 + 1 %
                 Case 1
-                    exp_present += 20 + exp_required \ 10       'exp 20 + 10 %
+                    exp_present += 25 + exp_required \ 10       'exp 25 + 10 %
                 Case 2
                     exp_present += 50 + exp_required \ 3        'exp 50 + 33 %
                 Case 3
