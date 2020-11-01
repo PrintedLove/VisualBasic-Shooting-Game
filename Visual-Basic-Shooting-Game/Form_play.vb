@@ -111,7 +111,7 @@ Public Class Form_play
                 playtime_m = playtime_s \ 60
                 playtime_s = playtime_s Mod 60
 
-                If gameTick < 99 Then
+                If gameTick < 32 Then
                     gameTick += 1
                 Else
                     gameTick = 0

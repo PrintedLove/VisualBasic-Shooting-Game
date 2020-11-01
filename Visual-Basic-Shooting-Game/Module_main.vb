@@ -38,12 +38,15 @@ Module Module_main
     Public spr_item As SpriteSheet = GetSprite("item.png", 4)
     Public spr_enemy As SpriteSheet = GetSprite("enemy.png", 7)
     Public spr_attack As SpriteSheet = GetSprite("attack.png", 4)
+    Public spr_attack_enemy As SpriteSheet = GetSprite("attack_enemy.png", 1)
+    Public spr_partical_attack As SpriteSheet = GetSprite("partical_attack.png", 1)
+    Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 3)
 
     'object
     Public obj_list As List(Of Object) = New List(Of Object) From {}
     Public enemy_num, enemy_numMax, item_num As UInt16
     Public enemy_spon =                 'enemy spon Probability by stage
-        {{100, 0, 0, 0, 0, 0, 0, 24},
+        {{40, 10, 10, 10, 10, 10, 10, 24},
         {95, 5, 0, 0, 0, 0, 0, 28},
         {90, 10, 0, 0, 0, 0, 0, 32},
         {80, 10, 0, 10, 0, 0, 0, 36},
@@ -55,14 +58,14 @@ Module Module_main
         {10, 15, 30, 5, 20, 10, 10, 48}}
 
     Public timeToDif =                  'Time of stage up (depending on difficulty level)
-        {{0.5, 1, 1.5, 2, 3, 5, 7, 10, 14, 18},
+        {{5, 1, 1.5, 2, 3, 5, 7, 10, 14, 18},
         {0.4, 0.8, 1.2, 1.75, 2.5, 4, 6, 8, 11, 15},
         {0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5, 7, 10}}
 
     Public hpToDif =                    'enemy HP (depending on difficulty level)
-        {{20, 100, 500, 15, 75, 50, 300},
-        {25, 150, 750, 20, 100, 75, 500},
-        {40, 250, 1500, 35, 200, 150, 750}}
+        {{20, 100, 500, 15, 75, 50, 150},
+        {30, 150, 750, 20, 125, 75, 250},
+        {40, 300, 1500, 35, 200, 225, 750}}
 
     'player
     Public lv, exp_present, exp_required As UInteger
@@ -101,12 +104,13 @@ Module Module_main
         difficulty = 1
     End Sub
 
-    Public Sub CreateObject(ByVal obj_type As Int16, Optional x As Integer = 0, Optional y As Integer = 0)
+    Public Sub CreateObject(ByVal obj_type As Int16, Optional value1 As Integer = 0,
+                            Optional value2 As Integer = 0, Optional value3 As Integer = 0, Optional value4 As Integer = 0)
         Dim obj As Object
 
         Select Case obj_type
             Case 1                  'enemy
-                obj = New Enemy
+                obj = New Enemy(value1, value2, value3)
                 obj_list.Add(obj)
                 enemy_num += 1
             Case 2                  'item
@@ -120,10 +124,10 @@ Module Module_main
                     obj_list.Add(obj)
                 End If
             Case 4                  'enemy attack
-                obj = New Effect(1, x, y)
+                obj = New Effect(1, value1, value2)
                 obj_list.Add(obj)
             Case 5                  'effect
-                obj = New Effect(2, x, y)
+                obj = New Effect(value1, value2, value3, value4)
                 obj_list.Add(obj)
         End Select
     End Sub
