@@ -7,6 +7,7 @@ Public Class Enemy : Inherits ObjectBase
     Private touchKill As Boolean = False
     Private isPlayerKill As Boolean = False
     Private attackCharged As Int16 = 0
+    Private hitTime As Int16 = 0
 
     Sub New(ByVal mode As Int16, ByVal spon_x As Integer, ByVal spon_y As Integer)
         spr = spr_enemy
@@ -42,30 +43,32 @@ Public Class Enemy : Inherits ObjectBase
         Select Case type
             Case 10                              'normal_small
                 rec.Size = New Point(28, 28)
-                enemyspd = 5 + random.Next(0, 2)
+                enemyspd = 7 + random.Next(0, 2)
             Case 11                              'normal_medium
                 rec.Size = New Point(55, 55)
+                damage_touch = 15
                 enemyspd = 6 + random.Next(0, 2)
             Case 12                              'normal_big
                 rec.Size = New Point(100, 100)
-                enemyspd = 7 + random.Next(0, 2)
+                damage_touch = 25
+                enemyspd = 5 + random.Next(0, 2)
             Case 13                              'rush_small
                 rec.Size = New Point(20, 20)
-                damage_touch = 20
+                damage_touch = 30
                 enemyspd = 12
                 touchKill = True
             Case 14                              'rush_big
                 rec.Size = New Point(35, 35)
-                damage_touch = 30
-                enemyspd = 10
+                damage_touch = 75
+                enemyspd = 11
                 touchKill = True
             Case 15                              'shoter_small
                 rec.Size = New Point(30, 30)
-                damage_shot = 15
+                damage_shot = 20
                 enemyspd = 8
             Case 16                              'shoter_big
                 rec.Size = New Point(30, 30)
-                damage_shot = 15
+                damage_shot = 33
                 enemyspd = 8
         End Select
 
@@ -100,7 +103,7 @@ Public Class Enemy : Inherits ObjectBase
 
             'enemy attack
             If type > 14 Then
-                If attackCharged > 2 Then
+                If attackCharged > 9 Then
                     If type = 15 Then
                         CreateObject(4, rec.X, rec.Y)
                     Else
@@ -111,7 +114,7 @@ Public Class Enemy : Inherits ObjectBase
 
                     attackCharged = 0
                 Else
-                    If gameTick = 0 Then
+                    If gameTick Mod 3 Then
                         attackCharged += 1
                     End If
                 End If
@@ -129,13 +132,46 @@ Public Class Enemy : Inherits ObjectBase
                         rec.Y -= Sign(obj.rec.Y - rec.Y)
                     End If
                 ElseIf obj.type = 100 Then                                  'collision with player attack
-                    If rec.IntersectsWith(obj.rec) Then
-                        enemyHp -= atk_dam
-                        obj.kill = True
+                    If Not obj.collisionList.Contains(Me.GetHashCode) And rec.IntersectsWith(obj.rec) Then
+                        Dim damage As Int16 = atk_dam
+                        Dim ctkChance As Int16 = random.Next(1, 100)
 
-                        For i As Int16 = 1 To 4
+                        If ctkChance <= critical Then
+                            damage = Round(atk_dam * critical_dam / 100)
+                            CreateObject(5, 203, obj.rec.X, obj.rec.Y)
+                        End If
+
+                        enemyHp -= damage
+
+                        If hitTime = 0 Then
+                            hitTime = 2
+                            spr_index += 7
+                        End If
+
+                        If obj.penetrateNum > 0 Then
+                            obj.penetrateNum -= 1
+                            obj.collisionList.Add(Me.GetHashCode)
+                        Else
+                            obj.kill = True
+                        End If
+
+                        If atk_explosion > 0 Then
+                            CreateObject(5, 202, obj.rec.X, obj.rec.Y)
+                        End If
+
+                        For i As Int16 = 1 To 3
                             CreateObject(5, 200, obj.rec.X, obj.rec.Y, i)
                         Next
+                    End If
+                ElseIf obj.type = 202 Then                                  'collision with player attack boom
+                    If Not obj.collisionList.Contains(Me.GetHashCode) And rec.IntersectsWith(obj.rec) Then
+                        obj.collisionList.Add(Me.GetHashCode)
+                        enemyHp -= Round(atk_dam * atk_explosion / 100)
+
+                        If hitTime = 0 Then
+                            hitTime = 1
+                            spr_index += 7
+                        End If
                     End If
                 End If
 
@@ -148,6 +184,14 @@ Public Class Enemy : Inherits ObjectBase
             If EnemyDistance > distanceToPlayer Then
                 EnemyDistance = distanceToPlayer
                 nearestEnemyIndex = index
+            End If
+
+            If hitTime > 0 And gameTick Mod 3 = 0 Then
+                hitTime -= 1
+
+                If hitTime = 0 Then
+                    spr_index -= 7
+                End If
             End If
         Else
             'kill by player
@@ -164,10 +208,8 @@ Public Class Enemy : Inherits ObjectBase
                         exp_present += 3
                         CreateObject(1, 10, rec.X, rec.Y)
                         CreateObject(1, 10, rec.X, rec.Y)
-                        CreateObject(1, 10, rec.X, rec.Y)
                     Case 12                              'normal_big
                         exp_present += 10
-                        CreateObject(1, 11, rec.X, rec.Y)
                         CreateObject(1, 11, rec.X, rec.Y)
                         CreateObject(1, 11, rec.X, rec.Y)
                     Case 13                              'rush_small
@@ -177,13 +219,11 @@ Public Class Enemy : Inherits ObjectBase
                         exp_present += 4
                         CreateObject(1, 13, rec.X, rec.Y)
                         CreateObject(1, 13, rec.X, rec.Y)
-                        CreateObject(1, 13, rec.X, rec.Y)
                     Case 15                              'shoter_small
                         exp_present += 5
 
                     Case 16                              'shoter_big
                         exp_present += 10
-                        CreateObject(1, 15, rec.X, rec.Y)
                         CreateObject(1, 15, rec.X, rec.Y)
                         CreateObject(1, 15, rec.X, rec.Y)
                 End Select

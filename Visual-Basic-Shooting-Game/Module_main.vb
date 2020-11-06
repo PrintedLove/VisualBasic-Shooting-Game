@@ -36,36 +36,38 @@ Module Module_main
     Public spr_hpBar As Sprite = GetSprite("hpBar.png")
     Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
     Public spr_item As SpriteSheet = GetSprite("item.png", 4)
-    Public spr_enemy As SpriteSheet = GetSprite("enemy.png", 7)
+    Public spr_enemy As SpriteSheet = GetSprite("enemy.png", 14)
     Public spr_attack As SpriteSheet = GetSprite("attack.png", 4)
+    Public spr_attack_boom As SpriteSheet = GetSprite("attack_boom.png", 9)
     Public spr_attack_enemy As SpriteSheet = GetSprite("attack_enemy.png", 1)
-    Public spr_partical_attack As SpriteSheet = GetSprite("partical_attack.png", 1)
-    Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 3)
+    Public spr_partical_attack As SpriteSheet = GetSprite("partical_attack.png", 5)
+    Public spr_partical_critical As SpriteSheet = GetSprite("partical_critical.png", 5)
+    Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 7)
 
     'object
     Public obj_list As List(Of Object) = New List(Of Object) From {}
     Public enemy_num, enemy_numMax, item_num As UInt16
     Public enemy_spon =                 'enemy spon Probability by stage
-        {{40, 10, 10, 10, 10, 10, 10, 24},
-        {95, 5, 0, 0, 0, 0, 0, 28},
-        {90, 10, 0, 0, 0, 0, 0, 32},
-        {80, 10, 0, 10, 0, 0, 0, 36},
-        {70, 10, 0, 20, 0, 0, 0, 36},
-        {60, 15, 5, 20, 0, 0, 0, 40},
-        {45, 20, 5, 20, 5, 5, 0, 42},
-        {30, 25, 10, 15, 10, 10, 0, 44},
-        {20, 20, 20, 10, 15, 10, 5, 46},
-        {10, 15, 30, 5, 20, 10, 10, 48}}
+        {{100, 0, 0, 0, 0, 0, 0, 16},
+        {90, 10, 0, 0, 0, 0, 0, 18},
+        {80, 10, 0, 10, 0, 0, 0, 20},
+        {70, 15, 0, 15, 0, 0, 0, 22},
+        {60, 15, 5, 20, 0, 0, 0, 24},
+        {45, 20, 5, 20, 5, 5, 0, 28},
+        {30, 25, 10, 15, 10, 10, 0, 32},
+        {25, 20, 15, 15, 10, 10, 5, 36},
+        {20, 15, 20, 10, 15, 10, 10, 40},
+        {10, 10, 30, 5, 20, 10, 15, 48}}
 
     Public timeToDif =                  'Time of stage up (depending on difficulty level)
-        {{5, 1, 1.5, 2, 3, 5, 7, 10, 14, 18},
-        {0.4, 0.8, 1.2, 1.75, 2.5, 4, 6, 8, 11, 15},
-        {0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5, 7, 10}}
+        {{1, 1.5, 2.25, 3, 4, 5.5, 7, 9, 12, 15},
+        {0.5, 1, 1.5, 2, 3, 4, 5.5, 7, 9, 11},
+        {0.25, 0.5, 0.75, 1.5, 2, 2.5, 3.5, 5, 6, 8}}
 
     Public hpToDif =                    'enemy HP (depending on difficulty level)
         {{20, 100, 500, 15, 75, 50, 150},
-        {30, 150, 750, 20, 125, 75, 250},
-        {40, 300, 1500, 35, 200, 225, 750}}
+        {30, 150, 750, 20, 125, 75, 225},
+        {50, 300, 1500, 35, 200, 125, 400}}
 
     'player
     Public lv, exp_present, exp_required As UInteger
@@ -120,7 +122,7 @@ Module Module_main
             Case 3                  'player attack
                 If obj_list.Count > nearestEnemyIndex Then
                     obj = New Effect(0, S_WIDTH \ 2, S_HEIGHT \ 2,
-                                 obj_list.Item(nearestEnemyIndex).rec.X, obj_list.Item(nearestEnemyIndex).rec.Y)
+                                 obj_list.Item(nearestEnemyIndex).rec.X, obj_list.Item(nearestEnemyIndex).rec.Y, value1)
                     obj_list.Add(obj)
                 End If
             Case 4                  'enemy attack

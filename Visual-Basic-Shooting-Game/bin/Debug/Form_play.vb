@@ -65,17 +65,17 @@ Public Class Form_play
         hp_regen = 0
         defense = 0
 
-        atk_dam = 10
-        atk_reload = 1
-        atk_spd = 10
-        atk_num = 1
-        atk_size = 1
+        atk_dam = 15
+        atk_reload = 0.5
+        atk_spd = 12
+        atk_num = 4
+        atk_size = 3
         atk_range = 200
-        atk_penetrate = 0
-        atk_explosion = 0
+        atk_penetrate = 1
+        atk_explosion = 20
 
-        critical = 0
-        critical_dam = 150
+        critical = 25
+        critical_dam = 200
 
         speed = 10
 
@@ -87,7 +87,7 @@ Public Class Form_play
         bg_y = 0
 
         enemy_num = 0
-        enemy_numMax = 48
+        enemy_numMax = 16
         item_num = 0
         obj_list.Clear()
         EnemyDistance = 9999
@@ -132,7 +132,10 @@ Public Class Form_play
             If EnemyDistance <= atk_range And tick > tick_attack + atk_reload * 10000000 Then
                 tick_attack = tick
                 EnemyDistance = 9999
-                CreateObject(3)
+
+                For i As Int16 = 1 To atk_num
+                    CreateObject(3, i - 1)
+                Next
             End If
         Loop
     End Sub
