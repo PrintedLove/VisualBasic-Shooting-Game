@@ -1,4 +1,6 @@
-﻿Public Class Item : Inherits ObjectBase
+﻿Imports System.Math
+
+Public Class Item : Inherits ObjectBase
 
     Public getItem As Boolean = False
 
@@ -43,11 +45,11 @@
 
             Select Case type
                 Case 0
-                    exp_present += 5 + exp_required \ 100      'exp 5 + 1 %
+                    exp_present += Round((5 + exp_required \ 100) * exp_bonus)      'exp 5 + 1 %
                 Case 1
-                    exp_present += 25 + exp_required \ 10       'exp 25 + 10 %
+                    exp_present += Round((25 + exp_required \ 10) * exp_bonus)       'exp 25 + 10 %
                 Case 2
-                    exp_present += 50 + exp_required \ 3        'exp 50 + 33 %
+                    exp_present += Round((50 + exp_required \ 3) * exp_bonus)        'exp 50 + 33 %
                 Case 3
                     hp += hp_max \ 5                           'hp 20%
 

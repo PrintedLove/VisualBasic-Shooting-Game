@@ -3,7 +3,7 @@
 Public Class Enemy : Inherits ObjectBase
 
     Private enemyHp As Integer
-    Private enemyspd, damage_touch, damage_shot As Int16
+    Private enemyspd, damage_touch As Int16
     Private touchKill As Boolean = False
     Private isPlayerKill As Boolean = False
     Private attackCharged As Int16 = 0
@@ -37,7 +37,6 @@ Public Class Enemy : Inherits ObjectBase
 
         spr_index = type - 10
         damage_touch = 10
-        damage_shot = 0
 
         'stat setting
         Select Case type
@@ -46,7 +45,7 @@ Public Class Enemy : Inherits ObjectBase
                 enemyspd = 7 + random.Next(0, 2)
             Case 11                              'normal_medium
                 rec.Size = New Point(55, 55)
-                damage_touch = 15
+                damage_touch = 16
                 enemyspd = 6 + random.Next(0, 2)
             Case 12                              'normal_big
                 rec.Size = New Point(100, 100)
@@ -54,7 +53,7 @@ Public Class Enemy : Inherits ObjectBase
                 enemyspd = 5 + random.Next(0, 2)
             Case 13                              'rush_small
                 rec.Size = New Point(20, 20)
-                damage_touch = 30
+                damage_touch = 33
                 enemyspd = 12
                 touchKill = True
             Case 14                              'rush_big
@@ -64,11 +63,9 @@ Public Class Enemy : Inherits ObjectBase
                 touchKill = True
             Case 15                              'shoter_small
                 rec.Size = New Point(30, 30)
-                damage_shot = 20
                 enemyspd = 8
             Case 16                              'shoter_big
                 rec.Size = New Point(30, 30)
-                damage_shot = 33
                 enemyspd = 8
         End Select
 
@@ -90,7 +87,7 @@ Public Class Enemy : Inherits ObjectBase
                 kill = True
             End If
 
-            hp -= damage_touch      'touch damage
+            hp -= damage_touch - defense      'touch damage
         End If
 
         If kill = False Then
@@ -202,28 +199,28 @@ Public Class Enemy : Inherits ObjectBase
 
                 Select Case type
                     Case 10                              'normal_small
-                        exp_present += 1
+                        exp_present += Round(1 * exp_bonus)
 
                     Case 11                              'normal_medium
-                        exp_present += 3
+                        exp_present += Round(3 * exp_bonus)
                         CreateObject(1, 10, rec.X, rec.Y)
                         CreateObject(1, 10, rec.X, rec.Y)
                     Case 12                              'normal_big
-                        exp_present += 10
+                        exp_present += Round(10 * exp_bonus)
                         CreateObject(1, 11, rec.X, rec.Y)
                         CreateObject(1, 11, rec.X, rec.Y)
                     Case 13                              'rush_small
-                        exp_present += 2
+                        exp_present += Round(2 * exp_bonus)
 
                     Case 14                              'rush_big
-                        exp_present += 4
+                        exp_present += Round(7 * exp_bonus)
                         CreateObject(1, 13, rec.X, rec.Y)
                         CreateObject(1, 13, rec.X, rec.Y)
                     Case 15                              'shoter_small
-                        exp_present += 5
+                        exp_present += Round(5 * exp_bonus)
 
                     Case 16                              'shoter_big
-                        exp_present += 10
+                        exp_present += Round(10 * exp_bonus)
                         CreateObject(1, 15, rec.X, rec.Y)
                         CreateObject(1, 15, rec.X, rec.Y)
                 End Select

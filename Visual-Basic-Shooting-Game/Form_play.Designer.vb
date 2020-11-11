@@ -41,6 +41,7 @@ Partial Class Form_play
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(944, 921)
         Me.Controls.Add(Me.PictureBox_play)
+        Me.Enabled = False
         Me.Name = "Form_play"
         Me.Text = "Form_play"
         CType(Me.PictureBox_play, System.ComponentModel.ISupportInitialize).EndInit()

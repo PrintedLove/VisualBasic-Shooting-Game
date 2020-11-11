@@ -2,13 +2,6 @@
 Imports System.Math
 
 Module Module_main
-    'game
-    Public difficulty, stage As Int16
-    Public gameTick As Int16 = 0
-    Public tick, tick_recent, tick_start, tick_attack As ULong
-    Public playtime_m, playtime_s As UInteger
-    Public EnemyDistance As Integer
-    Public nearestEnemyIndex As Int16
 
     'screen
     Public S_WIDTH As Int16 = 960
@@ -44,7 +37,15 @@ Module Module_main
     Public spr_partical_critical As SpriteSheet = GetSprite("partical_critical.png", 5)
     Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 7)
 
-    'object
+    'game
+    Public difficulty As Int16 = 1
+    Public stage As Int16
+    Public gameTick As Int16 = 0
+    Public tick, tick_recent, tick_start, tick_attack As ULong
+    Public playtime_m, playtime_s As UInteger
+    Public EnemyDistance As Integer
+    Public nearestEnemyIndex As Int16
+
     Public obj_list As List(Of Object) = New List(Of Object) From {}
     Public enemy_num, enemy_numMax, item_num As UInt16
     Public enemy_spon =                 'enemy spon Probability by stage
@@ -69,12 +70,16 @@ Module Module_main
         {30, 150, 750, 20, 125, 75, 225},
         {50, 300, 1500, 35, 200, 125, 400}}
 
+    Public backgound_x, backgound_y As Integer
+    Public showStatWindow As Boolean
+
     'player
     Public lv, exp_present, exp_required As UInteger
+    Public exp_bonus As Double
 
     Public hp_max As UInteger
     Public hp As Integer
-    Public hp_regen, defense, exp_bonus As Int16
+    Public hp_regen, defense As Int16
 
     Public atk_dam As UInteger
     Public atk_reload As Double
@@ -85,9 +90,6 @@ Module Module_main
     Public player_rec As Rectangle
     Public player_hspeed, player_vspeed As Integer
     Public playerMove As Boolean = False
-
-    'background
-    Public bg_x, bg_y As Integer
 
     Public Sub SetValue()
         Dim strFontName As String = Application.ExecutablePath
@@ -104,6 +106,52 @@ Module Module_main
         player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
 
         difficulty = 1
+    End Sub
+
+    Public Sub NewGame()
+        stage = 0
+
+        lv = 1
+        exp_present = 0
+        exp_required = 100
+        exp_bonus = 1
+        showStatWindow = False
+
+        hp_max = 100
+        hp = 100
+        hp_regen = 0
+        defense = 0
+
+        atk_dam = 10
+        atk_reload = 0.75
+        atk_spd = 10
+        atk_num = 1
+        atk_size = 1
+        atk_range = 200
+        atk_penetrate = 0
+        atk_explosion = 0
+
+        critical = 10
+        critical_dam = 150
+
+        speed = 10
+
+        player_hspeed = 0
+        player_vspeed = 0
+        playerMove = False
+
+        backgound_x = 0
+        backgound_y = 0
+
+        enemy_num = 0
+        enemy_numMax = 16
+        item_num = 0
+        EnemyDistance = 9999
+
+        tick_start = DateTime.Now.Ticks
+        tick_recent = 0
+        tick_attack = 0
+        gameTick = 0
     End Sub
 
     Public Sub CreateObject(ByVal obj_type As Int16, Optional value1 As Integer = 0,

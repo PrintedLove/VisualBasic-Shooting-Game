@@ -135,7 +135,7 @@
                 'touch with palyer
                 If rec.IntersectsWith(player_rec) Then
                     kill = True
-                    hp -= 10
+                    hp -= 25 - defense
                 End If
             End If
         End If

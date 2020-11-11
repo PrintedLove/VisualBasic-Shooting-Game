@@ -14,9 +14,6 @@ Public Class Form_play
     Private screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
     'game control
-    Private isRunning As Boolean = True
-    Private isGameOver As Boolean = False
-
     Private timer_main As Thread
 
     Private Sub Form_play_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -46,57 +43,7 @@ Public Class Form_play
         }
 
         'start game
-        SetValue()
         NewGame()
-    End Sub
-
-    Private Sub NewGame()
-        isRunning = True
-        isGameOver = False
-
-        stage = 0
-
-        lv = 1
-        exp_present = 0
-        exp_required = 100
-
-        hp_max = 100
-        hp = 100
-        hp_regen = 0
-        defense = 0
-
-        atk_dam = 15
-        atk_reload = 0.5
-        atk_spd = 12
-        atk_num = 4
-        atk_size = 3
-        atk_range = 200
-        atk_penetrate = 1
-        atk_explosion = 20
-
-        critical = 25
-        critical_dam = 200
-
-        speed = 10
-
-        player_hspeed = 0
-        player_vspeed = 0
-        playerMove = False
-
-        bg_x = 0
-        bg_y = 0
-
-        enemy_num = 0
-        enemy_numMax = 16
-        item_num = 0
-        obj_list.Clear()
-        EnemyDistance = 9999
-
-        tick_start = DateTime.Now.Ticks
-        tick_recent = 0
-        tick_attack = 0
-        gameTick = 0
-
         timer_main.Start()
     End Sub
 
@@ -118,14 +65,6 @@ Public Class Form_play
                 End If
 
                 GameEvent()
-
-                If isGameOver Then
-                    timer_main.Abort()
-                End If
-
-                If Not isRunning Then
-                    Form_play_ToClose()
-                End If
             End If
 
             'player attack
@@ -162,12 +101,12 @@ Public Class Form_play
             g.Clear(GRAY)
 
             'Draw Background Lines
-            DrawLine(g, New Point(S_WIDTH \ 2 + bg_x, 0), New Point(S_WIDTH \ 2 + bg_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y), New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, 0),
-                     New Point(S_WIDTH \ 2 + bg_x - Sign(bg_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(0, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2),
-                     New Point(S_WIDTH, S_HEIGHT \ 2 + bg_y - Sign(bg_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(S_WIDTH \ 2 + backgound_x, 0), New Point(S_WIDTH \ 2 + backgound_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(0, S_HEIGHT \ 2 + backgound_y), New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, 0),
+                     New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
+            DrawLine(g, New Point(0, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2),
+                     New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
 
             'Draw objects
             For Each obj As Object In obj_list
@@ -178,18 +117,21 @@ Public Class Form_play
             DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed \ 2, S_HEIGHT \ 2 - player_vspeed \ 2)
             DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
 
-            'Draw LV, EXP Bar
+            'Draw LV, EXP, HP Bar
             DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
             DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
             DrawText(g, "LV. " & CStr(lv), 40, 15, font_16, WHITE, MAX_ALPHA)
-
-            'Draw HP Bar
             DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
             DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max),
                                                                                   S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
 
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
+
+            'Draw Stat Window
+            If showStatWindow Then
+                DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
+            End If
         End Using
 
         If Not PictureBox_play.Image.Equals(bmp) Then
@@ -206,7 +148,7 @@ Public Class Form_play
             obj.Index = list_index
             obj.IndividualEvent()
 
-            If obj.kill Then
+            If obj.kill = True Or endGame = True Then
                 obj.Die()
 
                 Select Case obj.type
@@ -223,28 +165,30 @@ Public Class Form_play
             End If
         End While
 
-        'enemy object create,  number control
-        If enemy_num < enemy_numMax And gameTick Mod 25 = 0 Then
-            CreateObject(1)
-        End If
+        If endGame = False Then
+            'enemy object create,  number control
+            If enemy_num < enemy_numMax And gameTick Mod 25 = 0 Then
+                CreateObject(1)
+            End If
 
-        'item object create, number control
-        If item_num < 16 Then
-            CreateObject(2)
+            'item object create, number control
+            If item_num < 16 Then
+                CreateObject(2)
+            End If
         End If
     End Sub
 
     Private Sub BackgroundControl()
         'Background Line Move
-        bg_x += player_hspeed
-        bg_y += player_vspeed
+        backgound_x += player_hspeed
+        backgound_y += player_vspeed
 
-        If (bg_x > S_WIDTH \ 2 Or bg_x < -S_WIDTH \ 2) Then
-            bg_x -= Sign(bg_x) * S_WIDTH \ 2
+        If (backgound_x > S_WIDTH \ 2 Or backgound_x < -S_WIDTH \ 2) Then
+            backgound_x -= Sign(backgound_x) * S_WIDTH \ 2
         End If
 
-        If (bg_y > S_HEIGHT \ 2 Or bg_y < -S_HEIGHT \ 2) Then
-            bg_y -= Sign(bg_y) * S_HEIGHT \ 2
+        If (backgound_y > S_HEIGHT \ 2 Or backgound_y < -S_HEIGHT \ 2) Then
+            backgound_y -= Sign(backgound_y) * S_HEIGHT \ 2
         End If
 
         'stage up by time
@@ -263,9 +207,8 @@ Public Class Form_play
             exp_required = Round(exp_required * 1.01 + 25)
         End If
 
+        'Check HP
         If gameTick = 0 Then
-
-            'Check HP
             If hp < hp_max Then
                 If hp_regen > 0 Then
                     hp += hp_regen
@@ -275,6 +218,12 @@ Public Class Form_play
                     hp = hp_max
                 End If
             End If
+        End If
+
+        If hp < 1 Then
+            endGame = True
+            Hide()
+            Form_start.Show()
         End If
 
         'Move Control
@@ -331,15 +280,6 @@ Public Class Form_play
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        screen_bmp.Dispose()
-        PictureBox_play.Dispose()
-        timer_main.Abort()
-    End Sub
-
-    Private Sub Form_play_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If isRunning = True Then
-            isRunning = False
-            e.Cancel = True
-        End If
+        Form_start.Close()
     End Sub
 End Class

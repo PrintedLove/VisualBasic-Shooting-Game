@@ -29,14 +29,6 @@ C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Sh
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack_enemy.png
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\partical_attack.png
 C:\Users\dnjsw\OneDrive\문서\GitHub\Visual-Basic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\partical_enemy.png
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.resx
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\ObjectBase.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\SpriteSheet.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Enemy.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Module_main.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Sprite.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\Form_play.Designer.vb
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack_enemy.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\enemy.png
@@ -62,3 +54,4 @@ C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual-Basic-Shooting-Game.pdb
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack_boom.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\partical_critical.png
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Form_start.resources

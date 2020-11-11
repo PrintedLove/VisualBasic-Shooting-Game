@@ -13,26 +13,26 @@ Option Explicit On
 
 
 Namespace My
-
+    
     '참고: 자동으로 생성되므로 직접 이 파일을 수정하지 마세요.  변경할 사항이 있거나
     ' 파일에서 빌드 오류가 발생하는 경우 프로젝트 디자이너로
     ' 이동([프로젝트 속성]으로 이동하거나 솔루션 탐색기에서 My Project 노드를
     '두 번 클릭)한 다음 [애플리케이션] 탭에서 변경하세요.
     '
     Partial Friend Class MyApplication
-
-        <Global.System.Diagnostics.DebuggerStepThroughAttribute()>
+        
+        <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Public Sub New()
             MyBase.New(Global.Microsoft.VisualBasic.ApplicationServices.AuthenticationMode.Windows)
-            Me.IsSingleInstance = False
-            Me.EnableVisualStyles = True
-            Me.SaveMySettingsOnExit = True
-            Me.ShutdownStyle = Global.Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses
+            Me.IsSingleInstance = false
+            Me.EnableVisualStyles = true
+            Me.SaveMySettingsOnExit = true
+            Me.ShutDownStyle = Global.Microsoft.VisualBasic.ApplicationServices.ShutdownMode.AfterMainFormCloses
         End Sub
-
-        <Global.System.Diagnostics.DebuggerStepThroughAttribute()>
+        
+        <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.Visual_Basic_Shooting_Game.Form_play
+            Me.MainForm = Global.Visual_Basic_Shooting_Game.Form_start
         End Sub
     End Class
 End Namespace
