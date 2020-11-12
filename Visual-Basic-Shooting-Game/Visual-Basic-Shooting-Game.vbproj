@@ -181,6 +181,8 @@
     <Content Include="image\item.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\logo1.bmp" />
+    <None Include="image\logo.png" />
     <Content Include="image\partical_attack.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

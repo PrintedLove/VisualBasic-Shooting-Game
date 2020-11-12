@@ -12,7 +12,7 @@ Module Module_main
     Public MAX_ALPHA As Int16 = 255
     Public WHITE As Color = Color.FromArgb(MAX_ALPHA, 214, 231, 255)
     Public GRAY_DEEP As Color = Color.FromArgb(MAX_ALPHA, 66, 71, 75)
-    Public GRAY As Color = Color.FromArgb(MAX_ALPHA, 79, 85, 91)
+    Public GRAY As Color = Color.FromArgb(MAX_ALPHA, 79, 81, 91)
     Public GRAY_LIGHT As Color = Color.FromArgb(MAX_ALPHA, 107, 121, 141)
     Public SKYBLUE As Color = Color.FromArgb(MAX_ALPHA, 74, 140, 234)
 

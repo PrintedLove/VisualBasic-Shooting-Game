@@ -8,7 +8,6 @@ Imports System.Math
 Imports System.Threading
 
 Public Class Form_play
-
     'picturebox bitmap
     Private screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
 
@@ -20,6 +19,9 @@ Public Class Form_play
         FormBorderStyle = FormBorderStyle.FixedSingle
         Width = S_WIDTH
         Height = S_HEIGHT
+        BackColor = GRAY
+        AutoSizeMode = 0
+        FormBorderStyle = 1
 
         'picture box initialize
         PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
@@ -44,6 +46,7 @@ Public Class Form_play
     Private Sub Form_play_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         NewGame()
         timer_main.Start()
+        Enabled = True
     End Sub
 
     Private Sub TimerMain()
@@ -63,6 +66,7 @@ Public Class Form_play
                     gameTick = 0
                 End If
 
+                Application.DoEvents()
                 BackgroundControl()
                 ObjectControl()
                 PlayerControl()
@@ -262,7 +266,7 @@ Public Class Form_play
         playerMove = True
     End Sub
 
-    Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseClick
+    Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
         playerMove = False
     End Sub
 

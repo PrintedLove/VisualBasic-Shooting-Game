@@ -61,6 +61,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        '''</summary>
+        Friend ReadOnly Property logo() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("logo", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  System.Byte[] 형식의 지역화된 리소스를 찾습니다.
         '''</summary>
         Friend ReadOnly Property munro_ttf() As Byte()

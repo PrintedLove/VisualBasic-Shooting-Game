@@ -43,6 +43,7 @@
             End If
 
         End If
+
         Me.disposed = True
     End Sub
 
