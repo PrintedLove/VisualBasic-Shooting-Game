@@ -1,15 +1,21 @@
-﻿Imports System.Drawing.Text
+﻿'[Visual Basic] Visual Basic Shooting Game
+
+'made by - Printed Love
+'Blog: https://printed.tistory.com
+'YouTube: https://youtube.com/channel/UCtKTjiof6Mwa_4ffHDYyCbQ
+
+Imports System.Drawing.Text
 Imports System.Math
 
 Module Module_main
 
     'screen
-    Public S_WIDTH As Int16 = 960
-    Public S_HEIGHT As Int16 = 960
+    Public S_WIDTH As Short = 960
+    Public S_HEIGHT As Short = 960
     Public mouse_coord As Point
 
     'color
-    Public MAX_ALPHA As Int16 = 255
+    Public MAX_ALPHA As Short = 255
     Public WHITE As Color = Color.FromArgb(MAX_ALPHA, 214, 231, 255)
     Public GRAY_DEEP As Color = Color.FromArgb(MAX_ALPHA, 66, 71, 75)
     Public GRAY As Color = Color.FromArgb(MAX_ALPHA, 79, 81, 91)
@@ -18,6 +24,7 @@ Module Module_main
 
     'font
     Public font_munro As PrivateFontCollection = New PrivateFontCollection()
+    Public font_8 As Font
     Public font_12 As Font
     Public font_16 As Font
     Public font_32 As Font
@@ -38,16 +45,16 @@ Module Module_main
     Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 7)
 
     'game
-    Public difficulty As Int16 = 1
-    Public stage As Int16
-    Public gameTick As Int16 = 0
+    Public difficulty As Short = 1
+    Public stage As Short
+    Public gameTick As Short = 0
     Public tick, tick_recent, tick_start, tick_attack As ULong
     Public playtime_m, playtime_s As UInteger
     Public EnemyDistance As Integer
-    Public nearestEnemyIndex As Int16
+    Public nearestEnemyIndex As Short
 
     Public obj_list As List(Of Object) = New List(Of Object) From {}
-    Public enemy_num, enemy_numMax, item_num As UInt16
+    Public enemy_num, enemy_numMax, item_num As UShort
     Public enemy_spon =                 'enemy spon Probability by stage
         {{100, 0, 0, 0, 0, 0, 0, 16},
         {90, 10, 0, 0, 0, 0, 0, 18},
@@ -71,7 +78,15 @@ Module Module_main
         {50, 300, 1500, 35, 200, 125, 400}}
 
     Public backgound_x, backgound_y As Integer
-    Public showStatWindow As Boolean
+
+    'stat window
+    Public showStatWindow As Short = 0
+    Public statBnt_touch = {False, False, False}
+    Public statBnt_color = {GRAY_DEEP, GRAY_DEEP, GRAY_DEEP}
+    Public statBnt_statTpye = {0, 0, 0}
+    Public statBnt_statLV = {0, 0, 0}
+    Public statBnt_Text = {"", "", ""}
+    Public statText As String = ""
 
     'player
     Public lv, exp_present, exp_required As UInteger
@@ -79,13 +94,13 @@ Module Module_main
 
     Public hp_max As UInteger
     Public hp As Integer
-    Public hp_regen, defense As Int16
+    Public hp_regen, defense As Short
 
     Public atk_dam As UInteger
     Public atk_reload As Double
-    Public atk_spd, atk_num, atk_size, atk_range, atk_penetrate, atk_explosion, critical, critical_dam As Int16
+    Public atk_spd, atk_num, atk_size, atk_range, atk_penetrate, atk_explosion, critical, critical_dam As Short
 
-    Public speed As UInt16
+    Public speed As UShort
 
     Public player_rec As Rectangle
     Public player_hspeed, player_vspeed As Integer
@@ -96,11 +111,12 @@ Module Module_main
         strFontName = strFontName.Substring(0, strFontName.LastIndexOf("\bin")) & "\font\munro.ttf"
 
         font_munro.AddFontFile(strFontName)
+        font_8 = New Font(font_munro.Families(0), 8)
         font_12 = New Font(font_munro.Families(0), 12)
         font_16 = New Font(font_munro.Families(0), 16)
         font_32 = New Font(font_munro.Families(0), 32)
 
-        strFormat.LineAlignment = StringAlignment.Center
+        'strFormat.LineAlignment = StringAlignment.Center
         strFormat.Alignment = StringAlignment.Center
 
         player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
@@ -115,7 +131,7 @@ Module Module_main
         exp_present = 0
         exp_required = 100
         exp_bonus = 1
-        showStatWindow = False
+        showStatWindow = 0
 
         hp_max = 100
         hp = 100
@@ -154,7 +170,162 @@ Module Module_main
         gameTick = 0
     End Sub
 
-    Public Sub CreateObject(ByVal obj_type As Int16, Optional value1 As Integer = 0,
+    Public Sub SetStatWindow()
+        statBnt_color(0) = GRAY_DEEP
+        statBnt_color(1) = GRAY_DEEP
+        statBnt_color(2) = GRAY_DEEP
+        statBnt_touch(0) = False
+        statBnt_touch(1) = False
+        statBnt_touch(2) = False
+
+        For i As Short = 0 To 2
+            Dim retry As Boolean = True
+            Dim statRandom = New Random((gameTick + i * 11) * 17)
+            Dim statTpye As Short = statRandom.Next(0, 14)
+            Dim statValue = {0, ""}
+
+            While retry
+                statValue = GetStatLV(statTpye)
+
+                If statTpye < 4 Then
+                    retry = False
+                Else
+                    If statValue(0) <= 3 Then
+                        retry = False
+                    End If
+                End If
+
+                If retry Then
+                    statTpye = statRandom.Next(0, 3)
+                End If
+            End While
+
+            statBnt_statTpye(i) = statTpye
+            statBnt_statLV(i) = statValue(0)
+            statBnt_Text(i) = statValue(1)
+        Next
+    End Sub
+
+    Public Function GetStatLV(ByVal statType As Short)
+        Dim statValue = {0, ""}
+
+        Select Case statType
+            Case 0      'HP
+                statValue(0) = (hp_max - 100) \ 20 + 1
+                statValue(1) = "HP"
+
+            Case 1      'HP regen
+                statValue(0) = hp_regen + 1
+                statValue(1) = "HP Regen"
+
+            Case 2      'Attack Damage
+                statValue(0) = atk_dam - 9
+                statValue(1) = "Attack Damage"
+
+            Case 3      'Defense
+                statValue(0) = defense + 1
+                statValue(1) = "Defense"
+
+            Case 4      'Critical chance
+                statValue(0) = (critical - 10) \ 15 + 1
+                statValue(1) = "Critical Chance"
+
+            Case 5      'Critical damage
+                statValue(0) = (critical_dam - 150) \ 50 + 1
+                statValue(1) = "Critical Damage"
+
+            Case 6      'Move speed
+                statValue(0) = speed - 9
+                statValue(1) = "Move Speed"
+
+            Case 7      'EXP bonus
+                statValue(0) = (exp_bonus * 10 - 10) \ 5 + 1
+                statValue(1) = "EXP Bonus"
+
+            Case 8      'Attack reload
+                statValue(0) = (75 - (atk_reload * 100)) \ 15 + 1
+                statValue(1) = "Attack Reload"
+
+            Case 9      'Attack number
+                statValue(0) = atk_num
+                statValue(1) = "Attack Number"
+
+            Case 10      'Attack range
+                statValue(0) = (atk_range - 200) \ 50 + 1
+                statValue(1) = "Attack Range"
+
+            Case 11      'Attack speed
+                statValue(0) = atk_spd - 9
+                statValue(1) = "Attack Speed"
+
+            Case 12      'Attack size
+                statValue(0) = atk_size
+                statValue(1) = "Attack Size"
+
+            Case 13      'Attack explosion
+                statValue(0) = atk_explosion \ 20 + 1
+                statValue(1) = "Attack Explosion"
+
+            Case 14      'Attack penetrate
+                statValue(0) = atk_penetrate + 1
+                statValue(1) = "Attack Penetrate"
+
+        End Select
+
+        Return statValue
+    End Function
+
+    Public Sub SetStatLV(ByVal statType As Short)
+        Select Case statType
+            Case 0      'HP
+                hp_max += 20
+
+            Case 1      'HP regen
+                hp_regen += 1
+
+            Case 2      'Attack Damage
+                atk_dam += 1
+
+            Case 3      'Defense
+                defense += 1
+
+            Case 4      'Critical chance
+                critical += 15
+
+            Case 5      'Critical damage
+                critical_dam += 50
+
+            Case 6      'Move speed
+                speed += 1
+
+            Case 7      'EXP bonus
+                exp_bonus += 0.5
+
+            Case 8      'Attack reload
+                atk_reload -= 0.15
+
+            Case 9      'Attack number
+                atk_num += 1
+
+            Case 10      'Attack range
+                atk_range += 50
+
+            Case 11      'Attack speed
+                atk_spd += 1
+
+            Case 12      'Attack size
+                atk_size += 1
+
+            Case 13      'Attack explosion
+                atk_explosion += 20
+
+            Case 14      'Attack penetrate
+                atk_penetrate += 1
+
+        End Select
+    End Sub
+
+    Public Sub CreateObject(ByVal obj_type As Short, Optional value1 As Integer = 0,
                             Optional value2 As Integer = 0, Optional value3 As Integer = 0, Optional value4 As Integer = 0)
         Dim obj As Object
 
@@ -192,12 +363,12 @@ Module Module_main
     End Sub
 
     Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite_sheet As SpriteSheet,
-                          ByVal index As Int16, ByVal x As Integer, ByVal y As Integer)
+                          ByVal index As Short, ByVal x As Integer, ByVal y As Integer)
         g.DrawImage(sprite_sheet.spr(index), x - sprite_sheet.width \ 2, y - sprite_sheet.height \ 2)
     End Sub
 
     Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer,
-                        ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Int16)
+                        ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Short)
         Dim text_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
         Using brush As Brush = New Drawing.SolidBrush(text_color), f As Font = New Font(fnt.FontFamily, fnt.Size, fnt.Style)
@@ -206,7 +377,7 @@ Module Module_main
     End Sub
 
     Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point,
-                        ByVal color As Color, ByVal alpha As Int16, Optional size As Int16 = 2)
+                        ByVal color As Color, ByVal alpha As Short, Optional size As Short = 2)
         Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
 
         Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, size)
@@ -236,7 +407,7 @@ Module Module_main
         End If
     End Function
 
-    Public Function GetSprite(ByVal file_name As String, ByVal number As Int16) As SpriteSheet
+    Public Function GetSprite(ByVal file_name As String, ByVal number As Short) As SpriteSheet
         Dim strImageName As String = Application.ExecutablePath
 
         strImageName = strImageName.Substring(0, strImageName.LastIndexOf("\bin")) & "\image\" & file_name

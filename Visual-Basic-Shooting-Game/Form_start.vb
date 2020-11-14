@@ -6,7 +6,7 @@
 
 Public Class Form_start
 
-    Private nameColorR, nameColorG, nameColorB As UInt16
+    Private nameColorR, nameColorG, nameColorB As UShort
     Private nameColorR_t, nameColorG_t, nameColorB_t As Boolean
 
     Private Sub Form_start_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -145,7 +145,7 @@ Public Class Form_start
 
     Private Sub Form_start_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         'object destroy
-        Dim list_index As Int16 = 0
+        Dim list_index As Short = 0
 
         While list_index < obj_list.Count()
             Dim obj As Object = obj_list.Item(list_index)

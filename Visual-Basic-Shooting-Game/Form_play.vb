@@ -78,7 +78,7 @@ Public Class Form_play
                 tick_attack = tick
                 EnemyDistance = 9999
 
-                For i As Int16 = 1 To atk_num
+                For i As Short = 1 To atk_num
                     CreateObject(3, i - 1)
                 Next
             End If
@@ -122,7 +122,7 @@ Public Class Form_play
             'Draw LV, EXP, HP Bar
             DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
             DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
-            DrawText(g, "LV. " & CStr(lv), 40, 15, font_16, WHITE, MAX_ALPHA)
+            DrawText(g, "LV. " & CStr(lv), 40, 2, font_16, WHITE, MAX_ALPHA)
             DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
             DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max),
                                                                                   S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
@@ -130,12 +130,24 @@ Public Class Form_play
             'Draw Time
             DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
 
+            'Draw Stat LV
+            DrawText(g, statText, 64, 48, font_8, WHITE, MAX_ALPHA)
+
             'Draw Stat Window
-            If showStatWindow Then
-                DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
+            If showStatWindow > 0 Then
+                For i As Short = 0 To 2
+                    DrawLine(g, New Point(S_WIDTH \ 2 - 256 + i * 175, S_HEIGHT - 144),
+                             New Point(S_WIDTH \ 2 - 105 + i * 175, S_HEIGHT - 144), statBnt_color(i), 160, 96)
+                    DrawSprite(g, spr_skillicon, statBnt_statTpye(i), S_WIDTH \ 2 - 208 + i * 175, S_HEIGHT - 144)
+                    DrawText(g, statBnt_Text(i), S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 160,
+                             font_8, WHITE, MAX_ALPHA)
+                    DrawText(g, "LV. " & CStr(statBnt_statLV(i)), S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 128,
+                             font_12, SKYBLUE, MAX_ALPHA)
+                Next
             End If
         End Using
 
+        'Renewal PictureBox_play image
         If PictureBox_play.InvokeRequired = True Then
             PictureBox_play.Invoke(Sub() PictureBox_play_SetImage(bmp))
         Else
@@ -145,8 +157,8 @@ Public Class Form_play
     End Sub
 
     Private Sub ObjectControl()
-        'object event
-        Dim list_index As Int16 = 0
+        'Object Event
+        Dim list_index As Short = 0
 
         While list_index < obj_list.Count()
             Dim obj As Object = obj_list.Item(list_index)
@@ -171,12 +183,12 @@ Public Class Form_play
             End If
         End While
 
-        'enemy object create,  number control
+        'Enemy object create, number control
         If enemy_num < enemy_numMax And gameTick Mod 25 = 0 Then
             CreateObject(1)
         End If
 
-        'item object create, number control
+        'Item object create, number control
         If item_num < 16 Then
             CreateObject(2)
         End If
@@ -195,9 +207,23 @@ Public Class Form_play
             backgound_y -= Sign(backgound_y) * S_HEIGHT \ 2
         End If
 
-        'stage up by time
+        'Stage up by Time
         If stage < 9 And timeToDif(difficulty - 1, stage) < (tick_recent - tick_start) / 600000000 Then
             stage += 1
+        End If
+
+        'Check Stat Window Button
+        If showStatWindow > 0 Then
+            For i As Short = 0 To 2
+                If S_WIDTH \ 2 - 256 + i * 175 < mouse_coord.X And mouse_coord.X < S_WIDTH \ 2 - 105 + i * 175 And
+                   S_HEIGHT - 192 < mouse_coord.Y And mouse_coord.Y < S_HEIGHT - 96 Then
+                    statBnt_touch(i) = True
+                    statBnt_color(i) = GRAY_LIGHT
+                Else
+                    statBnt_touch(i) = False
+                    statBnt_color(i) = GRAY_DEEP
+                End If
+            Next
         End If
     End Sub
 
@@ -209,6 +235,11 @@ Public Class Form_play
             lv += 1
             exp_present = exp_excess
             exp_required = Round(exp_required * 1.01 + 25)
+
+            'stat window open
+            showStatWindow += 1
+
+            SetStatWindow()
         End If
 
         'Check HP
@@ -232,7 +263,7 @@ Public Class Form_play
             End If
         End If
 
-        'Move Control
+        'Player Move Control
         If playerMove = True Then
             Dim mouse_angle As Double = GetAngleTwoPoint(S_WIDTH \ 2, S_HEIGHT \ 2, mouse_coord.X, mouse_coord.Y)
             Dim player_moveCoord As Point = GetCoordCircle(0, 0, mouse_angle, speed)
@@ -268,14 +299,45 @@ Public Class Form_play
 
     Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
         playerMove = False
+
+        'Click stat choose button
+        If showStatWindow > 0 Then
+            Dim editStatText As Boolean = False
+
+            For i As Short = 0 To 2
+                If statBnt_touch(i) = True Then
+                    SetStatLV(statBnt_statTpye(i))
+
+                    showStatWindow -= 1
+                    editStatText = True
+
+                    If showStatWindow > 0 Then
+                        SetStatWindow()
+                    End If
+                End If
+            Next
+
+            'rewrite stat info text
+            If editStatText = True Then
+                statText = ""
+
+                For i As Short = 0 To 14
+                    Dim statValue = GetStatLV(i)
+
+                    If statValue(0) > 1 Then
+                        statText += statValue(1) & " LV." & CStr(statValue(0) - 1) & vbCrLf
+                    End If
+                Next
+            End If
+        End If
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         screen_bmp.Dispose()
         timer_main.Abort()
 
-        'object destroy
-        Dim list_index As Int16 = 0
+        'Object Destroy
+        Dim list_index As Short = 0
 
         While list_index < obj_list.Count()
             Dim obj As Object = obj_list.Item(list_index)
@@ -284,7 +346,7 @@ Public Class Form_play
             obj_list.RemoveAt(list_index)
         End While
 
-        'toggle to Form_start
+        'Toggle to Form_start
         Form_start.Show()
         Dispose()
     End Sub

@@ -3,12 +3,12 @@
 
     Protected disposed As Boolean = False
     Public kill As Boolean = False
-    Public index As Int16
+    Public index As Short
 
     Public rec As Rectangle
     Public spr As SpriteSheet
-    Public spr_index As Int16
-    Public type As Int16
+    Public spr_index As Short
+    Public type As Short
     Public random As Random
 
     Sub New()

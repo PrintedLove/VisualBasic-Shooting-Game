@@ -2,10 +2,10 @@
 
     Public hspeed, vspeed As Integer
     Public collisionList As New ArrayList()
-    Public penetrateNum As Int16
-    Private liveTime, liveTimeMax As Int16
+    Public penetrateNum As Short
+    Private liveTime, liveTimeMax As Short
 
-    Sub New(ByVal mode As Int16, ByVal x As Integer, ByVal y As Integer,
+    Sub New(ByVal mode As Short, ByVal x As Integer, ByVal y As Integer,
             Optional value1 As Integer = 0, Optional value2 As Integer = 0, Optional value3 As Integer = 0)
         MyBase.New()
 

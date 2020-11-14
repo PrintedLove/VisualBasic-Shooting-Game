@@ -3,22 +3,22 @@
 Public Class Enemy : Inherits ObjectBase
 
     Private enemyHp As Integer
-    Private enemyspd, damage_touch As Int16
+    Private enemyspd, damage_touch As Short
     Private touchKill As Boolean = False
     Private isPlayerKill As Boolean = False
-    Private attackCharged As Int16 = 0
-    Private hitTime As Int16 = 0
+    Private attackCharged As Short = 0
+    Private hitTime As Short = 0
 
-    Sub New(ByVal mode As Int16, ByVal spon_x As Integer, ByVal spon_y As Integer)
+    Sub New(ByVal mode As Short, ByVal spon_x As Integer, ByVal spon_y As Integer)
         spr = spr_enemy
 
         If mode = 0 Then
             'random spon
-            Dim enemy_type As Int16 = random.Next(1, 100)
-            Dim enemy_per As Int16 = 0
+            Dim enemy_type As Short = random.Next(1, 100)
+            Dim enemy_per As Short = 0
 
             'spon probability
-            For index As Int16 = 0 To 6
+            For index As Short = 0 To 6
                 enemy_per += enemy_spon(stage, index)
 
                 If enemy_type <= enemy_per Then
@@ -118,7 +118,7 @@ Public Class Enemy : Inherits ObjectBase
             End If
 
             'collision with other(enemy, player attack)
-            Dim list_index As Int16 = 0
+            Dim list_index As Short = 0
 
             While list_index < obj_list.Count()
                 Dim obj As Object = obj_list.Item(list_index)
@@ -130,8 +130,8 @@ Public Class Enemy : Inherits ObjectBase
                     End If
                 ElseIf obj.type = 100 Then                                  'collision with player attack
                     If Not obj.collisionList.Contains(Me.GetHashCode) And rec.IntersectsWith(obj.rec) Then
-                        Dim damage As Int16 = atk_dam
-                        Dim ctkChance As Int16 = random.Next(1, 100)
+                        Dim damage As Short = atk_dam
+                        Dim ctkChance As Short = random.Next(1, 100)
 
                         If ctkChance <= critical Then
                             damage = Round(atk_dam * critical_dam / 100)
@@ -156,7 +156,7 @@ Public Class Enemy : Inherits ObjectBase
                             CreateObject(5, 202, obj.rec.X, obj.rec.Y)
                         End If
 
-                        For i As Int16 = 1 To 3
+                        For i As Short = 1 To 3
                             CreateObject(5, 200, obj.rec.X, obj.rec.Y, i)
                         Next
                     End If
@@ -193,7 +193,7 @@ Public Class Enemy : Inherits ObjectBase
         Else
             'kill by player
             If isPlayerKill = True Then
-                For i As Int16 = 1 To 4
+                For i As Short = 1 To 4
                     CreateObject(5, 201, rec.X, rec.Y, i)
                 Next
 
