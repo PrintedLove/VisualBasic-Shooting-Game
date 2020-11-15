@@ -36,7 +36,7 @@ Public Class Enemy : Inherits ObjectBase
         End If
 
         spr_index = type - 10
-        damage_touch = 10
+        damage_touch = Round(10 * timeToEA)
 
         'stat setting
         Select Case type
@@ -45,20 +45,20 @@ Public Class Enemy : Inherits ObjectBase
                 enemyspd = 7 + random.Next(0, 2)
             Case 11                              'normal_medium
                 rec.Size = New Point(55, 55)
-                damage_touch = 16
+                damage_touch = Round(16 * timeToEA)
                 enemyspd = 6 + random.Next(0, 2)
             Case 12                              'normal_big
                 rec.Size = New Point(100, 100)
-                damage_touch = 25
+                damage_touch = Round(25 * timeToEA)
                 enemyspd = 5 + random.Next(0, 2)
             Case 13                              'rush_small
                 rec.Size = New Point(20, 20)
-                damage_touch = 33
+                damage_touch = Round(33 * timeToEA)
                 enemyspd = 12
                 touchKill = True
             Case 14                              'rush_big
                 rec.Size = New Point(35, 35)
-                damage_touch = 75
+                damage_touch = Round(75 * timeToEA)
                 enemyspd = 11
                 touchKill = True
             Case 15                              'shoter_small
@@ -69,7 +69,7 @@ Public Class Enemy : Inherits ObjectBase
                 enemyspd = 8
         End Select
 
-        enemyHp = hpToDif(difficulty - 1, type - 10)
+        enemyHp = Round(hpToDif(difficulty - 1, type - 10) * timeToEA)
     End Sub
 
     Sub IndividualEvent()
@@ -152,9 +152,7 @@ Public Class Enemy : Inherits ObjectBase
                             obj.kill = True
                         End If
 
-                        If atk_explosion > 0 Then
-                            CreateObject(5, 202, obj.rec.X, obj.rec.Y)
-                        End If
+                        If atk_explosion > 0 Then CreateObject(5, 202, obj.rec.X, obj.rec.Y)
 
                         For i As Short = 1 To 3
                             CreateObject(5, 200, obj.rec.X, obj.rec.Y, i)

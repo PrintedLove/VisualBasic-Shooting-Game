@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form_start
     Inherits System.Windows.Forms.Form
 
     'Form은 Dispose를 재정의하여 구성 요소 목록을 정리합니다.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Form_start
     '참고: 다음 프로시저는 Windows Form 디자이너에 필요합니다.
     '수정하려면 Windows Form 디자이너를 사용하십시오.  
     '코드 편집기에서는 수정하지 마세요.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Button_start = New System.Windows.Forms.Button()
@@ -38,7 +38,7 @@ Partial Class Form_start
         Me.Button_start.Cursor = System.Windows.Forms.Cursors.Default
         Me.Button_start.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.Button_start.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Button_start.Location = New System.Drawing.Point(166, 276)
+        Me.Button_start.Location = New System.Drawing.Point(174, 276)
         Me.Button_start.Name = "Button_start"
         Me.Button_start.Size = New System.Drawing.Size(132, 43)
         Me.Button_start.TabIndex = 0
@@ -53,7 +53,7 @@ Partial Class Form_start
         Me.Button_help.Cursor = System.Windows.Forms.Cursors.Default
         Me.Button_help.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.Button_help.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Button_help.Location = New System.Drawing.Point(166, 325)
+        Me.Button_help.Location = New System.Drawing.Point(174, 325)
         Me.Button_help.Name = "Button_help"
         Me.Button_help.Size = New System.Drawing.Size(132, 43)
         Me.Button_help.TabIndex = 1
@@ -68,7 +68,7 @@ Partial Class Form_start
         Me.Button_exit.Cursor = System.Windows.Forms.Cursors.Default
         Me.Button_exit.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.Button_exit.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.Button_exit.Location = New System.Drawing.Point(166, 374)
+        Me.Button_exit.Location = New System.Drawing.Point(174, 374)
         Me.Button_exit.Name = "Button_exit"
         Me.Button_exit.Size = New System.Drawing.Size(132, 43)
         Me.Button_exit.TabIndex = 2
@@ -77,7 +77,7 @@ Partial Class Form_start
         '
         'Label_name
         '
-        Me.Label_name.Location = New System.Drawing.Point(12, 48)
+        Me.Label_name.Location = New System.Drawing.Point(20, 49)
         Me.Label_name.Name = "Label_name"
         Me.Label_name.Size = New System.Drawing.Size(440, 118)
         Me.Label_name.TabIndex = 1
@@ -95,8 +95,8 @@ Partial Class Form_start
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackgroundImage = Global.Visual_Basic_Shooting_Game.My.Resources.Resources.logo
-        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(464, 441)
+        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.ClientSize = New System.Drawing.Size(480, 479)
         Me.Controls.Add(Me.Label_name)
         Me.Controls.Add(Me.Button_exit)
         Me.Controls.Add(Me.Button_help)

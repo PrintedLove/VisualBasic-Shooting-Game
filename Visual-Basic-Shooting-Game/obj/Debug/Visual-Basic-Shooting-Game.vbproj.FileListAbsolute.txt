@@ -55,3 +55,9 @@ C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\attack_boom.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\image\partical_critical.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\obj\Debug\Visual_Basic_Shooting_Game.Form_start.resources
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\background.mp3
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\button.mp3
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\explosion.mp3
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\getEXP.mp3
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\lvUp.mp3
+C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Debug\sound\shoot.mp3

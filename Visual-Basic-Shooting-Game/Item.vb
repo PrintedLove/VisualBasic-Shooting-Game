@@ -42,6 +42,7 @@ Public Class Item : Inherits ObjectBase
         'collision with player 
         If Not getItem And rec.IntersectsWith(player_rec) Then
             kill = True
+            getItem = True
 
             Select Case type
                 Case 0

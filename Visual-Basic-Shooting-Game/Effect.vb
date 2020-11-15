@@ -1,4 +1,6 @@
-﻿Public Class Effect : Inherits ObjectBase
+﻿Imports System.Math
+
+Public Class Effect : Inherits ObjectBase
 
     Public hspeed, vspeed As Integer
     Public collisionList As New ArrayList()
@@ -135,7 +137,7 @@
                 'touch with palyer
                 If rec.IntersectsWith(player_rec) Then
                     kill = True
-                    hp -= 25 - defense
+                    hp -= Round(25 * timeToEA) - defense
                 End If
             End If
         End If

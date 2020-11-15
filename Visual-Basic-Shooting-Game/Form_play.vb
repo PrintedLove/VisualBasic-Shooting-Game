@@ -22,6 +22,7 @@ Public Class Form_play
         BackColor = GRAY
         AutoSizeMode = 0
         FormBorderStyle = 1
+        player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
 
         'picture box initialize
         PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
@@ -77,6 +78,8 @@ Public Class Form_play
             If EnemyDistance <= atk_range And tick > tick_attack + atk_reload * 10000000 Then
                 tick_attack = tick
                 EnemyDistance = 9999
+
+                Invoke(Sub() GS_PlaySound("snd_shoot"))
 
                 For i As Short = 1 To atk_num
                     CreateObject(3, i - 1)
@@ -172,9 +175,13 @@ Public Class Form_play
                 Select Case obj.type
                     Case 0 To 9
                         item_num -= 1
+                        If obj.getItem = True Then Invoke(Sub() GS_PlaySoundOnce("snd_getExp"))
 
                     Case 10 To 99
                         enemy_num -= 1
+
+                    Case 100
+                        If atk_explosion > 0 Then Invoke(Sub() GS_PlaySoundOnce("snd_explosion"))
                 End Select
 
                 obj_list.RemoveAt(list_index)
@@ -207,9 +214,15 @@ Public Class Form_play
             backgound_y -= Sign(backgound_y) * S_HEIGHT \ 2
         End If
 
+        Dim time_m As Double = (tick_recent - tick_start) / 60000000
+
         'Stage up by Time
-        If stage < 9 And timeToDif(difficulty - 1, stage) < (tick_recent - tick_start) / 600000000 Then
+        If stage < 9 And timeToDif(difficulty - 1, stage) < time_m \ 10 Then
             stage += 1
+        End If
+
+        If timeToEA * 10 < time_m Then
+            timeToEA += 0.01
         End If
 
         'Check Stat Window Button
@@ -235,6 +248,8 @@ Public Class Form_play
             lv += 1
             exp_present = exp_excess
             exp_required = Round(exp_required * 1.01 + 25)
+
+            Invoke(Sub() GS_PlaySound("snd_lvUp"))
 
             'stat window open
             showStatWindow += 1
@@ -279,6 +294,14 @@ Public Class Form_play
                 player_vspeed -= Sign(player_vspeed) * Max(Abs(player_vspeed \ 3), 1)
             End If
         End If
+    End Sub
+
+    Sub GS_PlaySound(ByVal SndName As String)
+        GS.Play(SndName)
+    End Sub
+
+    Sub GS_PlaySoundOnce(ByVal SndName As String)
+        If GS.IsPlaying(SndName) = False Then GS.Play(SndName)
     End Sub
 
     Function PictureBox_play_GetImage()
@@ -347,7 +370,16 @@ Public Class Form_play
         End While
 
         'Toggle to Form_start
-        Form_start.Show()
+        With Form_start
+            .Show()
+            .Button_help.Focus()
+            .Button_help.Text = "- BACK -"
+            .Button_exit.Hide()
+            .Button_start.Hide()
+            .Label_name.Text = "SCORE: " & Format(playtime_m, "00") & " : " & Format(playtime_s, "00")
+            .GS_PlaySound("snd_background")
+        End With
+
         Dispose()
     End Sub
 

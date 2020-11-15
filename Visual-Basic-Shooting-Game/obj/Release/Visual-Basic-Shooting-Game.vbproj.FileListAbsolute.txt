@@ -11,14 +11,6 @@ C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\image\player_core.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\image\skillicon.png
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\font\munro.ttf
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Form_play.resx
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\ObjectBase.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\SpriteSheet.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Enemy.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Module_main.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Sprite.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Form_play.vb
-C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Form_play.Designer.vb
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Visual-Basic-Shooting-Game.exe.config
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Visual-Basic-Shooting-Game.exe
 C:\Users\dnjsw\Documents\GitHub\VisualBasic-Shooting-Game\Visual-Basic-Shooting-Game\bin\Release\Visual-Basic-Shooting-Game.pdb

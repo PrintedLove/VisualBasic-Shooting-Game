@@ -31,20 +31,23 @@ Module Module_main
     Public strFormat As New StringFormat
 
     'image
-    Public spr_player_core As Sprite = GetSprite("player_core.png")
-    Public spr_player_body As Sprite = GetSprite("player_body.png")
-    Public spr_hpBar As Sprite = GetSprite("hpBar.png")
-    Public spr_skillicon As SpriteSheet = GetSprite("skillicon.png", 15)
-    Public spr_item As SpriteSheet = GetSprite("item.png", 4)
-    Public spr_enemy As SpriteSheet = GetSprite("enemy.png", 14)
-    Public spr_attack As SpriteSheet = GetSprite("attack.png", 4)
-    Public spr_attack_boom As SpriteSheet = GetSprite("attack_boom.png", 9)
-    Public spr_attack_enemy As SpriteSheet = GetSprite("attack_enemy.png", 1)
-    Public spr_partical_attack As SpriteSheet = GetSprite("partical_attack.png", 5)
-    Public spr_partical_critical As SpriteSheet = GetSprite("partical_critical.png", 5)
-    Public spr_partical_enemy As SpriteSheet = GetSprite("partical_enemy.png", 7)
+    Public spr_player_core As Sprite
+    Public spr_player_body As Sprite
+    Public spr_hpBar As Sprite
+    Public spr_skillicon As SpriteSheet
+    Public spr_item As SpriteSheet
+    Public spr_enemy As SpriteSheet
+    Public spr_attack As SpriteSheet
+    Public spr_attack_boom As SpriteSheet
+    Public spr_attack_enemy As SpriteSheet
+    Public spr_partical_attack As SpriteSheet
+    Public spr_partical_critical As SpriteSheet
+    Public spr_partical_enemy As SpriteSheet
 
     'game
+    Public WithEvents GS As New GameSounds
+
+    Public dirPath As String
     Public difficulty As Short = 1
     Public stage As Short
     Public gameTick As Short = 0
@@ -78,6 +81,7 @@ Module Module_main
         {50, 300, 1500, 35, 200, 125, 400}}
 
     Public backgound_x, backgound_y As Integer
+    Public timeToEA As Double
 
     'stat window
     Public showStatWindow As Short = 0
@@ -107,21 +111,35 @@ Module Module_main
     Public playerMove As Boolean = False
 
     Public Sub SetValue()
-        Dim strFontName As String = Application.ExecutablePath
-        strFontName = strFontName.Substring(0, strFontName.LastIndexOf("\bin")) & "\font\munro.ttf"
+        dirPath = My.Application.Info.DirectoryPath()
 
-        font_munro.AddFontFile(strFontName)
+        font_munro.AddFontFile(dirPath & "\font\munro.ttf")
         font_8 = New Font(font_munro.Families(0), 8)
         font_12 = New Font(font_munro.Families(0), 12)
         font_16 = New Font(font_munro.Families(0), 16)
         font_32 = New Font(font_munro.Families(0), 32)
 
-        'strFormat.LineAlignment = StringAlignment.Center
         strFormat.Alignment = StringAlignment.Center
 
-        player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
+        spr_player_core = GetSprite("player_core.png")
+        spr_player_body = GetSprite("player_body.png")
+        spr_hpBar = GetSprite("hpBar.png")
+        spr_skillicon = GetSprite("skillicon.png", 15)
+        spr_item = GetSprite("item.png", 4)
+        spr_enemy = GetSprite("enemy.png", 14)
+        spr_attack = GetSprite("attack.png", 4)
+        spr_attack_boom = GetSprite("attack_boom.png", 9)
+        spr_attack_enemy = GetSprite("attack_enemy.png", 1)
+        spr_partical_attack = GetSprite("partical_attack.png", 5)
+        spr_partical_critical = GetSprite("partical_critical.png", 5)
+        spr_partical_enemy = GetSprite("partical_enemy.png", 7)
 
-        difficulty = 1
+        GS.AddSound("snd_background", dirPath & "\sound\background.mp3")
+        GS.AddSound("snd_button", dirPath & "\sound\button.mp3")
+        GS.AddSound("snd_shoot", dirPath & "\sound\shoot.mp3")
+        GS.AddSound("snd_explosion", dirPath & "\sound\explosion.mp3")
+        GS.AddSound("snd_getExp", dirPath & "\sound\getExp.mp3")
+        GS.AddSound("snd_lvUp", dirPath & "\sound\lvUp.mp3")
     End Sub
 
     Public Sub NewGame()
@@ -168,6 +186,9 @@ Module Module_main
         tick_recent = 0
         tick_attack = 0
         gameTick = 0
+        timeToEA = 1
+
+        statText = ""
     End Sub
 
     Public Sub SetStatWindow()
@@ -219,11 +240,11 @@ Module Module_main
                 statValue(1) = "HP Regen"
 
             Case 2      'Attack Damage
-                statValue(0) = atk_dam - 9
+                statValue(0) = (atk_dam - 10) \ 10 + 1
                 statValue(1) = "Attack Damage"
 
             Case 3      'Defense
-                statValue(0) = defense + 1
+                statValue(0) = defense \ 5 + 1
                 statValue(1) = "Defense"
 
             Case 4      'Critical chance
@@ -284,10 +305,10 @@ Module Module_main
                 hp_regen += 1
 
             Case 2      'Attack Damage
-                atk_dam += 1
+                atk_dam += 10
 
             Case 3      'Defense
-                defense += 1
+                defense += 5
 
             Case 4      'Critical chance
                 critical += 15
@@ -386,9 +407,7 @@ Module Module_main
     End Sub
 
     Public Function GetSprite(ByVal file_name As String) As Sprite
-        Dim strImageName As String = Application.ExecutablePath
-
-        strImageName = strImageName.Substring(0, strImageName.LastIndexOf("\bin")) & "\image\" & file_name
+        Dim strImageName As String = dirPath & "\image\" & file_name
 
         If IO.File.Exists(strImageName) Then
             Dim img As Image = Image.FromFile(strImageName)
@@ -408,9 +427,7 @@ Module Module_main
     End Function
 
     Public Function GetSprite(ByVal file_name As String, ByVal number As Short) As SpriteSheet
-        Dim strImageName As String = Application.ExecutablePath
-
-        strImageName = strImageName.Substring(0, strImageName.LastIndexOf("\bin")) & "\image\" & file_name
+        Dim strImageName As String = dirPath & "\image\" & file_name
 
         If IO.File.Exists(strImageName) Then
             Dim img As Image = Image.FromFile(strImageName)

@@ -22,6 +22,11 @@ Visual-Basic-Shooting-Game
   재정의합니다.
 </summary>
 </member>
+<member name="P:Visual_Basic_Shooting_Game.My.Resources.Resources.logo">
+<summary>
+  System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+</summary>
+</member>
 <member name="P:Visual_Basic_Shooting_Game.My.Resources.Resources.munro_ttf">
 <summary>
   System.Byte[] 형식의 지역화된 리소스를 찾습니다.

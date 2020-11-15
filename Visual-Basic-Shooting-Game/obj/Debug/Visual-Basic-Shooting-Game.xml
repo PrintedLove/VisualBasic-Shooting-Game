@@ -32,5 +32,51 @@ Visual-Basic-Shooting-Game
   System.Byte[] 형식의 지역화된 리소스를 찾습니다.
 </summary>
 </member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.AddSound(System.String,System.String)">
+ <summary>Adds and opens a (.wav) or (.mp3) sound file to the sound collection.</summary>
+ <param name="SoundName">A name to refer to the sound being added.</param>
+ <param name="SndFilePath">The full path and name to the sound file.</param>
+ <returns>True if the sound is successfully added.</returns>
+ <remarks>Name can only be used once. If another sound has the same name the file will not be added and the function returns False.</remarks>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.RemoveSound(System.String)">
+ <summary>Closes the sound file and removes it from the sound collection.</summary>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.ClearSounds">
+ <summary>Closes all sound files and removes them from the sound collection.</summary>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.Play(System.String)">
+ <summary>Plays the sound.</summary>
+ <param name="SoundName">The Name of the sound to play.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.Stop(System.String)">
+ <summary>Stops the sound.</summary>
+ <param name="SoundName">The Name of the sound to stop.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.Pause(System.String)">
+ <summary>Pauses the sound.</summary>
+ <param name="SoundName">The Name of the sound to pause.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.Resume(System.String)">
+ <summary>Resumes a paused sound.</summary>
+ <param name="SoundName">The Name of the sound to resume.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.IsPlaying(System.String)">
+ <summary>Checks the sounds playing status.</summary>
+ <param name="SoundName">The Name used to add and refer to the sound.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.IsStopped(System.String)">
+ <summary>Checks the sounds stopped status.</summary>
+ <param name="SoundName">The Name used to add and refer to the sound.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.IsPaused(System.String)">
+ <summary>Checks the sounds paused status.</summary>
+ <param name="SoundName">The Name used to add and refer to the sound.</param>
+</member>
+<member name="M:Visual_Basic_Shooting_Game.GameSounds.SetVolume(System.String,System.Int32)">
+ <summary>Sets the Volume. Does not seem to work for (.wav) files. Works on mp3 though.</summary>
+ <param name="sName">The name of the sound.</param>
+ <param name="value">An integer value from 0 to 1000 to set the volume to.</param>
+</member>
 </members>
 </doc>
