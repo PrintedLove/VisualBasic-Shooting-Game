@@ -22,34 +22,20 @@ Partial Class Form_play
     '코드 편집기에서는 수정하지 마세요.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.PictureBox_play = New System.Windows.Forms.PictureBox()
-        CType(Me.PictureBox_play, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'PictureBox_play
-        '
-        Me.PictureBox_play.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox_play.Margin = New System.Windows.Forms.Padding(0)
-        Me.PictureBox_play.Name = "PictureBox_play"
-        Me.PictureBox_play.Size = New System.Drawing.Size(960, 960)
-        Me.PictureBox_play.TabIndex = 0
-        Me.PictureBox_play.TabStop = False
         '
         'Form_play
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(944, 921)
-        Me.Controls.Add(Me.PictureBox_play)
+        Me.DoubleBuffered = True
         Me.Enabled = False
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "Form_play"
         Me.Text = "Form_play"
-        CType(Me.PictureBox_play, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents PictureBox_play As PictureBox
 End Class

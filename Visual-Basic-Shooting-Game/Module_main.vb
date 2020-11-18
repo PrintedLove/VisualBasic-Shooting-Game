@@ -14,13 +14,27 @@ Module Module_main
     Public S_HEIGHT As Short = 960
     Public mouse_coord As Point
 
-    'color
+    'color, brush, pen
     Public MAX_ALPHA As Short = 255
     Public WHITE As Color = Color.FromArgb(MAX_ALPHA, 214, 231, 255)
     Public GRAY_DEEP As Color = Color.FromArgb(MAX_ALPHA, 66, 71, 75)
     Public GRAY As Color = Color.FromArgb(MAX_ALPHA, 79, 81, 91)
     Public GRAY_LIGHT As Color = Color.FromArgb(MAX_ALPHA, 107, 121, 141)
     Public SKYBLUE As Color = Color.FromArgb(MAX_ALPHA, 74, 140, 234)
+
+    Public brush_W As Brush = New SolidBrush(WHITE)
+    Public brush_GD As Brush = New SolidBrush(GRAY_DEEP)
+    Public brush_GD160 As Brush = New SolidBrush(Color.FromArgb(160, 66, 71, 75))
+    Public brush_GL As Brush = New SolidBrush(GRAY_LIGHT)
+    Public brush_GL160 As Brush = New SolidBrush(Color.FromArgb(160, 107, 121, 141))
+    Public brush_SK As Brush = New SolidBrush(SKYBLUE)
+
+    Public pen_GD_2 As Pen = New Pen(brush_GD, 2)
+    Public pen_GL_16 As Pen = New Pen(brush_GL, 16)
+    Public pen_SK_16 As Pen = New Pen(brush_SK, 16)
+    Public pen_W_3 As Pen = New Pen(brush_W, 3)
+    Public pen_GD_96 As Pen = New Pen(brush_GD160, 96)
+    Public pen_GL_96 As Pen = New Pen(brush_GL160, 96)
 
     'font
     Public font_munro As PrivateFontCollection = New PrivateFontCollection()
@@ -86,7 +100,7 @@ Module Module_main
     'stat window
     Public showStatWindow As Short = 0
     Public statBnt_touch = {False, False, False}
-    Public statBnt_color = {GRAY_DEEP, GRAY_DEEP, GRAY_DEEP}
+    Public statBnt_color = {pen_GD_96, pen_GD_96, pen_GD_96}
     Public statBnt_statTpye = {0, 0, 0}
     Public statBnt_statLV = {0, 0, 0}
     Public statBnt_Text = {"", "", ""}
@@ -192,9 +206,9 @@ Module Module_main
     End Sub
 
     Public Sub SetStatWindow()
-        statBnt_color(0) = GRAY_DEEP
-        statBnt_color(1) = GRAY_DEEP
-        statBnt_color(2) = GRAY_DEEP
+        statBnt_color(0) = pen_GD_96
+        statBnt_color(1) = pen_GD_96
+        statBnt_color(2) = pen_GD_96
         statBnt_touch(0) = False
         statBnt_touch(1) = False
         statBnt_touch(2) = False
@@ -386,24 +400,6 @@ Module Module_main
     Public Sub DrawSprite(ByVal g As Graphics, ByVal sprite_sheet As SpriteSheet,
                           ByVal index As Short, ByVal x As Integer, ByVal y As Integer)
         g.DrawImage(sprite_sheet.spr(index), x - sprite_sheet.width \ 2, y - sprite_sheet.height \ 2)
-    End Sub
-
-    Public Sub DrawText(ByVal g As Graphics, ByVal str As String, ByVal x As Integer,
-                        ByVal y As Integer, ByVal fnt As Font, ByVal color As Color, ByVal alpha As Short)
-        Dim text_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
-
-        Using brush As Brush = New Drawing.SolidBrush(text_color), f As Font = New Font(fnt.FontFamily, fnt.Size, fnt.Style)
-            g.DrawString(str, f, brush, x, y, strFormat)
-        End Using
-    End Sub
-
-    Public Sub DrawLine(ByVal g As Graphics, ByVal pnt_x As Point, ByVal pnt_y As Point,
-                        ByVal color As Color, ByVal alpha As Short, Optional size As Short = 2)
-        Dim line_color As Color = Color.FromArgb(alpha, color.R, color.G, color.B)
-
-        Using brush As Brush = New SolidBrush(line_color), pen As Pen = New Drawing.Pen(brush, size)
-            g.DrawLine(pen, pnt_x, pnt_y)
-        End Using
     End Sub
 
     Public Function GetSprite(ByVal file_name As String) As Sprite

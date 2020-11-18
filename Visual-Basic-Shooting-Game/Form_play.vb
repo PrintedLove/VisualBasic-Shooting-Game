@@ -8,9 +8,6 @@ Imports System.Math
 Imports System.Threading
 
 Public Class Form_play
-    'picturebox bitmap
-    Private screen_bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
-
     'game control
     Private timer_main As Thread
 
@@ -23,20 +20,6 @@ Public Class Form_play
         AutoSizeMode = 0
         FormBorderStyle = 1
         player_rec = New Rectangle(S_WIDTH \ 2, S_HEIGHT \ 2, 25, 25)
-
-        'picture box initialize
-        PictureBox_play.Size = New Size(S_WIDTH, S_HEIGHT)
-
-        Dim bmp As New Bitmap(S_WIDTH, S_HEIGHT, Imaging.PixelFormat.Format32bppArgb)
-
-        screen_bmp = bmp
-
-        Using g As Graphics = Graphics.FromImage(screen_bmp)
-            Me.DoubleBuffered = True
-            g.Clear(GRAY)
-        End Using
-
-        PictureBox_play.Image = bmp
 
         'main timer thread
         timer_main = New Thread(AddressOf TimerMain) With {
@@ -71,7 +54,7 @@ Public Class Form_play
                 BackgroundControl()
                 ObjectControl()
                 PlayerControl()
-                DrawGraphics()
+                Invoke(Sub() Me.Invalidate())
             End If
 
             'player attack
@@ -88,75 +71,51 @@ Public Class Form_play
         Loop
     End Sub
 
-    Private Sub DrawGraphics()
-        Dim bmp As Bitmap = PictureBox_play_GetImage()
+    Private Sub Form_play_Paint(sender As Object, e As PaintEventArgs) Handles MyBase.Paint
+        Dim g = e.Graphics
 
-        If PictureBox_play.InvokeRequired = True Then
-            bmp = PictureBox_play.Invoke(Function() PictureBox_play_GetImage())
-        Else
-            bmp = PictureBox_play_GetImage()
-        End If
+        g.Clear(GRAY)
 
-        If Not screen_bmp.Equals(bmp) Then
-            screen_bmp = bmp
-        End If
+        'Draw Background Lines
+        g.DrawLine(pen_GD_2, New Point(S_WIDTH \ 2 + backgound_x, 0), New Point(S_WIDTH \ 2 + backgound_x, S_HEIGHT))
+        g.DrawLine(pen_GD_2, New Point(0, S_HEIGHT \ 2 + backgound_y), New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y))
+        g.DrawLine(pen_GD_2, New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, 0) _
+                       , New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, S_HEIGHT))
+        g.DrawLine(pen_GD_2, New Point(0, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2) _
+                       , New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2))
 
-        Using g As Graphics = Graphics.FromImage(bmp)
-            Me.DoubleBuffered = True
-            g.Clear(GRAY)
+        'Draw objects
+        For Each obj As Object In obj_list
+            obj.Draw(g)
+        Next
 
-            'Draw Background Lines
-            DrawLine(g, New Point(S_WIDTH \ 2 + backgound_x, 0), New Point(S_WIDTH \ 2 + backgound_x, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(0, S_HEIGHT \ 2 + backgound_y), New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, 0),
-                     New Point(S_WIDTH \ 2 + backgound_x - Sign(backgound_x) * S_WIDTH \ 2, S_HEIGHT), GRAY_DEEP, MAX_ALPHA)
-            DrawLine(g, New Point(0, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2),
-                     New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2), GRAY_DEEP, MAX_ALPHA)
+        'Draw Player
+        DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed \ 2, S_HEIGHT \ 2 - player_vspeed \ 2)
+        DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
+        'Draw LV, EXP, HP Bar
+        g.DrawLine(pen_GL_16, New Point(5, 14), New Point(S_WIDTH - 21, 14))
+        g.DrawLine(pen_SK_16, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14))
+        g.DrawString("LV. " & CStr(lv), font_16, brush_W, 40, 2, strFormat)
+        DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
+        g.DrawLine(pen_W_3, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30),
+                       New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max), S_HEIGHT \ 2 + 30))
 
-            'Draw objects
-            For Each obj As Object In obj_list
-                obj.Draw(g)
+        'Draw Time
+        g.DrawString(Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), font_16, brush_W, S_WIDTH \ 2, 75, strFormat)
+
+        'Draw Stat LV
+        g.DrawString(statText, font_8, brush_W, 64, 48, strFormat)
+
+        'Draw Stat Window
+        If showStatWindow > 0 Then
+            For i As Short = 0 To 2
+                g.DrawLine(statBnt_color(i), New Point(S_WIDTH \ 2 - 256 + i * 175, S_HEIGHT - 144),
+                               New Point(S_WIDTH \ 2 - 105 + i * 175, S_HEIGHT - 144))
+                DrawSprite(g, spr_skillicon, statBnt_statTpye(i), S_WIDTH \ 2 - 208 + i * 175, S_HEIGHT - 144)
+                g.DrawString(statBnt_Text(i), font_8, brush_W, S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 160, strFormat)
+                g.DrawString("LV. " & CStr(statBnt_statLV(i)), font_12, brush_W, S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 128, strFormat)
             Next
-
-            'Draw Player
-            DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed \ 2, S_HEIGHT \ 2 - player_vspeed \ 2)
-            DrawSprite(g, spr_player_body, S_WIDTH \ 2, S_HEIGHT \ 2)
-
-            'Draw LV, EXP, HP Bar
-            DrawLine(g, New Point(5, 14), New Point(S_WIDTH - 21, 14), GRAY_LIGHT, MAX_ALPHA, 16)
-            DrawLine(g, New Point(5, 14), New Point(5 + CInt((S_WIDTH - 26) * exp_present / exp_required), 14), SKYBLUE, MAX_ALPHA, 16)
-            DrawText(g, "LV. " & CStr(lv), 40, 2, font_16, WHITE, MAX_ALPHA)
-            DrawSprite(g, spr_hpBar, S_WIDTH \ 2, S_HEIGHT \ 2 + 30)
-            DrawLine(g, New Point(S_WIDTH \ 2 - 13, S_HEIGHT \ 2 + 30), New Point(S_WIDTH \ 2 - 13 + CInt(27 * hp / hp_max),
-                                                                                  S_HEIGHT \ 2 + 30), WHITE, MAX_ALPHA, 3)
-
-            'Draw Time
-            DrawText(g, Format(playtime_m, "00") & " : " & Format(playtime_s, "00"), S_WIDTH \ 2, 75, font_16, WHITE, MAX_ALPHA)
-
-            'Draw Stat LV
-            DrawText(g, statText, 64, 48, font_8, WHITE, MAX_ALPHA)
-
-            'Draw Stat Window
-            If showStatWindow > 0 Then
-                For i As Short = 0 To 2
-                    DrawLine(g, New Point(S_WIDTH \ 2 - 256 + i * 175, S_HEIGHT - 144),
-                             New Point(S_WIDTH \ 2 - 105 + i * 175, S_HEIGHT - 144), statBnt_color(i), 160, 96)
-                    DrawSprite(g, spr_skillicon, statBnt_statTpye(i), S_WIDTH \ 2 - 208 + i * 175, S_HEIGHT - 144)
-                    DrawText(g, statBnt_Text(i), S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 160,
-                             font_8, WHITE, MAX_ALPHA)
-                    DrawText(g, "LV. " & CStr(statBnt_statLV(i)), S_WIDTH \ 2 - 140 + i * 175, S_HEIGHT - 128,
-                             font_12, SKYBLUE, MAX_ALPHA)
-                Next
-            End If
-        End Using
-
-        'Renewal PictureBox_play image
-        If PictureBox_play.InvokeRequired = True Then
-            PictureBox_play.Invoke(Sub() PictureBox_play_SetImage(bmp))
-        Else
-            PictureBox_play_SetImage(bmp)
         End If
-
     End Sub
 
     Private Sub ObjectControl()
@@ -231,10 +190,10 @@ Public Class Form_play
                 If S_WIDTH \ 2 - 256 + i * 175 < mouse_coord.X And mouse_coord.X < S_WIDTH \ 2 - 105 + i * 175 And
                    S_HEIGHT - 192 < mouse_coord.Y And mouse_coord.Y < S_HEIGHT - 96 Then
                     statBnt_touch(i) = True
-                    statBnt_color(i) = GRAY_LIGHT
+                    statBnt_color(i) = pen_GL_96
                 Else
                     statBnt_touch(i) = False
-                    statBnt_color(i) = GRAY_DEEP
+                    statBnt_color(i) = pen_GD_96
                 End If
             Next
         End If
@@ -304,23 +263,15 @@ Public Class Form_play
         If GS.IsPlaying(SndName) = False Then GS.Play(SndName)
     End Sub
 
-    Function PictureBox_play_GetImage()
-        Return PictureBox_play.Image
-    End Function
-
-    Sub PictureBox_play_SetImage(ByVal img As Bitmap)
-        PictureBox_play.Image = img
-    End Sub
-
-    Private Sub PictureBox_play_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseMove
+    Private Sub Form_play_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         mouse_coord = e.Location
     End Sub
 
-    Private Sub PictureBox_play_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseDown
+    Private Sub Form_play_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
         playerMove = True
     End Sub
 
-    Private Sub PictureBox_play_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox_play.MouseUp
+    Private Sub Form_play_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp
         playerMove = False
 
         'Click stat choose button
@@ -356,7 +307,6 @@ Public Class Form_play
     End Sub
 
     Private Sub Form_play_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        screen_bmp.Dispose()
         timer_main.Abort()
 
         'Object Destroy
@@ -382,5 +332,4 @@ Public Class Form_play
 
         Dispose()
     End Sub
-
 End Class
