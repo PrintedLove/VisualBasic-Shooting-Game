@@ -85,9 +85,12 @@ Public Class Form_play
                        , New Point(S_WIDTH, S_HEIGHT \ 2 + backgound_y - Sign(backgound_y) * S_HEIGHT \ 2))
 
         'Draw objects
-        For Each obj As Object In obj_list
-            obj.Draw(g)
-        Next
+        Dim list_index As Short = 0
+
+        While list_index < obj_list.Count()
+            obj_list.Item(list_index).Draw(g)
+            list_index += 1
+        End While
 
         'Draw Player
         DrawSprite(g, spr_player_core, S_WIDTH \ 2 - player_hspeed \ 2, S_HEIGHT \ 2 - player_vspeed \ 2)
